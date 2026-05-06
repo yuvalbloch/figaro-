@@ -25,4 +25,14 @@ export const dataSlice = (set) => ({
       imageRefs: { ...s.imageRefs, [imageRefId]: ref },
       _loaded: { ...s._loaded, [imageRefId]: { rows: null, blobURL } },
     })),
+  removeImageRef: (imageRefId) =>
+    set((s) => {
+      const existing = s._loaded[imageRefId];
+      if (existing?.blobURL) URL.revokeObjectURL(existing.blobURL);
+      const imageRefs = { ...s.imageRefs };
+      delete imageRefs[imageRefId];
+      const _loaded = { ...s._loaded };
+      delete _loaded[imageRefId];
+      return { imageRefs, _loaded };
+    }),
 });

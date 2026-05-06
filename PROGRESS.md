@@ -1,6 +1,6 @@
 # Figaro — Progress Tracker
 
-Last updated: 2026-05-06
+Last updated: 2026-05-06 (Phase 4 complete)
 
 Phases follow the order agreed at session start. A phase ends when each of its
 acceptance points is verifiable in the running app.
@@ -29,42 +29,43 @@ acceptance points is verifiable in the running app.
 - [x] `npm install` succeeds and `npm run build` produces a working bundle (184 kB JS gz 59 kB)
 - [x] Empty shell renders with "New session" button (dialog itself lands in Phase 2)
 
-## Phase 2 — Canvas + grid [ ]
+## Phase 2 — Canvas + grid [x]
 
 **Goal:** User can create a session, see the grid, merge cells, resize tracks.
 
-- [ ] `NewSessionDialog` — canvas preset + rows/cols + live preview
-- [ ] Canvas surface renders at real proportions with drop shadow + neutral bg
-- [ ] N×M panel grid render (`Panel`, `EmptyPanel`)
-- [ ] Panel selection (2px accent outline, hairline on hover)
-- [ ] Cell-merge mode toolbar + click-two-cells flow + rectangle validation
-- [ ] `GridDivider` track resizer (drag, snap, min size)
-- [ ] Auto-labeling: `PanelLabel` in reading order (A/B/C…)
-- [ ] Per-panel label override (`label.auto = false`)
-- [ ] Canvas zoom-to-fit button
+- [x] `NewSessionDialog` — canvas preset + rows/cols + live preview
+- [x] Canvas surface renders at real proportions with drop shadow + neutral bg
+- [x] N×M panel grid render (`Panel`, `EmptyPanel`)
+- [x] Panel selection (2px accent outline, hairline on hover)
+- [x] Cell-merge mode toolbar + click-two-cells flow + rectangle validation
+- [x] `GridDivider` track resizer (drag, snap, min size)
+- [x] Auto-labeling: `PanelLabel` in reading order (A/B/C…)
+- [x] Per-panel label override (`label.auto = false`) via Inspector when a panel is selected
+- [x] Canvas zoom-to-fit button (`Fit` in `CanvasToolbar`, also auto-fits on resize)
 
-## Phase 3 — Data manager + image panels [ ]
+## Phase 3 — Data manager + image panels [x]
 
 **Goal:** User can upload data and drag it onto a panel.
 
-- [ ] `DataManager` add-dataset flow via PapaParse (CSV) and JSON parser
-- [ ] `DatasetCard` shows column count, row count, type chips
-- [ ] `ColumnPicker` reusable component
-- [ ] dnd-kit: dataset → panel
-- [ ] Image panel path (SVG/PNG via file picker, `object-fit: contain`)
-- [ ] Image controls: alt text, background, border
+- [x] `DataManager` add-dataset flow via PapaParse (CSV) and JSON parser
+- [x] `DatasetCard` shows column count, row count, type chips
+- [x] `ColumnPicker` reusable component
+- [x] dnd-kit: dataset → panel
+- [x] Image panel path (SVG/PNG via file picker, `object-fit: contain`)
+- [x] Image controls: alt text, background, border
+- [x] Toy example datasets in `public/examples/` + "Load examples" button (Phase 9 item delivered early)
 
-## Phase 4 — Plot engine + simple charts [ ]
+## Phase 4 — Plot engine + simple charts [x]
 
 **Goal:** Five chart types render with the full styling control panel.
 
-- [ ] `PlotEngine` interface + Plotly mounting
-- [ ] Chart renderers: bar, histogram, pie, heatmap, scatter
-- [ ] Per-chart parameter schemas
-- [ ] Control panel renders schemas dynamically (slider, color, font, select…)
-- [ ] Apply / Reset draft model
-- [ ] Overflow rules (`engine/overflow.js`)
-- [ ] Shared X / Shared Y linking within row/column
+- [x] `PlotEngine` interface + Plotly mounting
+- [x] Chart renderers: bar, histogram, pie, heatmap, scatter
+- [x] Per-chart parameter schemas
+- [x] Control panel renders schemas dynamically (slider, color, font, select…)
+- [x] Apply / Reset draft model
+- [x] Overflow rules (`engine/overflow.js`)
+- [x] Shared X / Shared Y linking within row/column
 
 ## Phase 5 — Stacked bar + themes/palettes/fonts [ ]
 
@@ -100,7 +101,7 @@ Order: SVG → PNG → HTML → PDF.
 
 ## Phase 9 — Polish [ ]
 
-- [ ] `public/examples/` with 3 example CSVs + "Load example" button
+- [x] `public/examples/` with 3 example CSVs + "Load example" button (delivered in Phase 3)
 - [ ] Walk through every acceptance criterion in spec §14
 - [ ] Performance pass on 10k-row dataset
 - [ ] Sweep code for `TODO(v2)` markers on out-of-scope items

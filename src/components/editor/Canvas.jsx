@@ -14,6 +14,7 @@ export function Canvas() {
   const labeling = useStore((s) => s.labeling);
   const openDialog = useStore((s) => s.openDialog);
   const selectRegion = useStore((s) => s.selectRegion);
+  const fitTrigger = useStore((s) => s.ui.canvasFitTrigger);
 
   const containerRef = useRef(null);
   const surfaceRef = useRef(null);
@@ -35,7 +36,7 @@ export function Canvas() {
     const observer = new ResizeObserver(([entry]) => compute(entry.contentRect));
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [widthPx, heightPx, layout.rows]);
+  }, [widthPx, heightPx, layout.rows, fitTrigger]);
 
   const labels = useMemo(
     () => computeAutoLabels(layout.regions, labeling.style),

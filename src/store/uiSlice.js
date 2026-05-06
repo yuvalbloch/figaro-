@@ -10,6 +10,7 @@ export const uiSlice = (set) => ({
       export: false,
     },
     draft: null,
+    canvasFitTrigger: 0,
   },
   selectRegion: (regionId) =>
     set((s) => ({ ui: { ...s.ui, selectedRegionId: regionId } })),
@@ -28,4 +29,6 @@ export const uiSlice = (set) => ({
       ui: { ...s.ui, dialogs: { ...s.ui.dialogs, [name]: false } },
     })),
   setDraft: (draft) => set((s) => ({ ui: { ...s.ui, draft } })),
+  requestCanvasFit: () =>
+    set((s) => ({ ui: { ...s.ui, canvasFitTrigger: s.ui.canvasFitTrigger + 1 } })),
 });

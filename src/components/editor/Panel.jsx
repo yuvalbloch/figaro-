@@ -1,7 +1,10 @@
+import { useDroppable } from '@dnd-kit/core';
 import { useStore } from '@/store';
 import { cn } from '@/lib/cn';
 import { EmptyPanel } from './EmptyPanel';
+import { ImagePanel } from './ImagePanel';
 import { PanelLabel } from './PanelLabel';
+import { PlotEngine } from '@/engine/PlotEngine';
 
 export function Panel({ region, label }) {
   const panel = useStore((s) => s.panels[region.id]);
@@ -16,6 +19,12 @@ export function Panel({ region, label }) {
   const setMergeFirst = useStore((s) => s.setMergeFirst);
   const mergeRegions = useStore((s) => s.mergeRegions);
   const splitRegion = useStore((s) => s.splitRegion);
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: `panel-${region.id}`,
+    data: { kind: 'panel', regionId: region.id },
+    disabled: panel?.type !== 'empty' || mergeMode,
+  });
 
   const isMerged =
     region.rowEnd - region.rowStart > 1 || region.colEnd - region.colStart > 1;
@@ -57,6 +66,7 @@ export function Panel({ region, label }) {
 
   return (
     <div
+      ref={setNodeRef}
       style={{
         gridColumn: `${region.colStart} / ${region.colEnd}`,
         gridRow: `${region.rowStart} / ${region.rowEnd}`,
@@ -68,24 +78,22 @@ export function Panel({ region, label }) {
         'relative bg-white transition-colors cursor-pointer',
         isMergeFirst
           ? 'outline outline-2 outline-blue-500 -outline-offset-2'
-          : selected
+          : isOver
             ? 'outline outline-2 outline-primary -outline-offset-2'
-            : hover
-              ? 'outline outline-1 outline-neutral-300 -outline-offset-1'
-              : ''
+            : selected
+              ? 'outline outline-2 outline-primary -outline-offset-2'
+              : hover
+                ? 'outline outline-1 outline-neutral-300 -outline-offset-1'
+                : ''
       )}
     >
-      {(!panel || panel.type === 'empty') && <EmptyPanel />}
-      {panel?.type === 'plot' && (
-        <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
-          Plot (Phase 4)
-        </div>
+      {(!panel || panel.type === 'empty') && (
+        <EmptyPanel regionId={region.id} isOver={isOver} />
       )}
-      {panel?.type === 'image' && (
-        <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
-          Image (Phase 3)
-        </div>
+      {panel?.type === 'plot' && panel.plotId && (
+        <PlotEngine regionId={region.id} plotId={panel.plotId} />
       )}
+      {panel?.type === 'image' && <ImagePanel panel={panel} />}
 
       {labeling.enabled && labelText && (
         <PanelLabel
