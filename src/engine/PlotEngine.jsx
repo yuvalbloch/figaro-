@@ -3,6 +3,7 @@ import Plotly from 'plotly.js-dist-min';
 import { getChart } from './registry';
 import { baseConfig } from './layout';
 import { computeSharedRange } from './axisLinking';
+import { plotRegistry } from './plotRegistry';
 import { useStore } from '@/store';
 
 export function PlotEngine({ regionId, plotId }) {
@@ -41,6 +42,13 @@ export function PlotEngine({ regionId, plotId }) {
     setWarnings(result.warnings || []);
     Plotly.react(ref.current, result.data, result.layout, baseConfig);
   }, [plot, dataset, rows, theme, customPalette, sharedX, sharedY]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    plotRegistry.set(plotId, el);
+    return () => plotRegistry.delete(plotId);
+  }, [plotId]);
 
   useEffect(() => {
     const el = ref.current;

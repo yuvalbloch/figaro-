@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/cn';
 import { PALETTE_DATA } from '@/themes/palettes';
 import { FONTS } from '@/persistence/schema';
+import { useStore } from '@/store';
 
 function FieldShell({ label, hint, children, className }) {
   return (
@@ -116,6 +117,15 @@ function ColumnField({ field, value, onChange, datasetId }) {
 
 function PaletteField({ field, value, onChange }) {
   const current = value || 'tableau10';
+  const customPalette = useStore((s) => s.customPalette);
+  const setCustomPalette = useStore((s) => s.setCustomPalette);
+
+  const updateCustomColor = (index, color) => {
+    const next = [...customPalette];
+    next[index] = color;
+    setCustomPalette(next);
+  };
+
   return (
     <FieldShell label={field.label} hint={field.hint}>
       <div className="space-y-1">
@@ -139,6 +149,38 @@ function PaletteField({ field, value, onChange }) {
             </span>
           </button>
         ))}
+
+        {/* Custom palette row */}
+        <button
+          type="button"
+          onClick={() => onChange('custom')}
+          className={cn(
+            'w-full flex items-center gap-2 px-2 py-1 rounded border text-left text-xs transition-colors',
+            current === 'custom' ? 'border-primary bg-accent' : 'border-input hover:bg-accent'
+          )}
+        >
+          <span className="capitalize w-16 shrink-0">Custom</span>
+          <span className="flex-1 flex">
+            {customPalette.map((c, i) => (
+              <span key={i} className="h-4 flex-1" style={{ backgroundColor: c }} />
+            ))}
+          </span>
+        </button>
+
+        {current === 'custom' && (
+          <div className="flex gap-1 pt-1">
+            {customPalette.map((c, i) => (
+              <input
+                key={i}
+                type="color"
+                value={c}
+                onChange={(e) => updateCustomColor(i, e.target.value)}
+                className="flex-1 h-6 rounded border border-input cursor-pointer p-0"
+                title={`Color ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </FieldShell>
   );

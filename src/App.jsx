@@ -3,6 +3,8 @@ import { DataManager } from '@/components/data/DataManager';
 import { Canvas } from '@/components/editor/Canvas';
 import { ControlPanel } from '@/components/controls/ControlPanel';
 import { NewSessionDialog } from '@/components/dialogs/NewSessionDialog';
+import { LocateFilesDialog } from '@/components/dialogs/LocateFilesDialog';
+import { ExportDialog } from '@/components/dialogs/ExportDialog';
 import { CanvasDndProvider } from '@/components/editor/CanvasDndProvider';
 
 export default function App() {
@@ -22,6 +24,8 @@ export default function App() {
           </aside>
         </div>
         <NewSessionDialog />
+        <LocateFilesDialog />
+        <ExportDialog />
       </div>
     </CanvasDndProvider>
   );

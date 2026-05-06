@@ -1,6 +1,14 @@
 # Figaro — Progress Tracker
 
-Last updated: 2026-05-06 (Phase 4 complete)
+Last updated: 2026-05-06 (Phase 7 complete)
+
+## Run the app
+
+```
+npm run dev
+```
+
+Then open http://localhost:5173 in your browser.
 
 Phases follow the order agreed at session start. A phase ends when each of its
 acceptance points is verifiable in the running app.
@@ -67,29 +75,29 @@ acceptance points is verifiable in the running app.
 - [x] Overflow rules (`engine/overflow.js`)
 - [x] Shared X / Shared Y linking within row/column
 
-## Phase 5 — Stacked bar + themes/palettes/fonts [ ]
+## Phase 5 — Stacked bar + themes/palettes/fonts [x]
 
-- [ ] `stackedBar` renderer (grouped + normalized variants)
-- [ ] Theme switcher applies defaults to new plots
-- [ ] Custom palette swatch row
-- [ ] Font dropdown wired to bundled fonts (still loaded via Google Fonts at this stage)
+- [x] `stackedBar` renderer (grouped + normalized variants)
+- [x] Theme switcher applies defaults to new plots
+- [x] Custom palette swatch row
+- [x] Font dropdown wired to bundled fonts (still loaded via Google Fonts at this stage)
 
-## Phase 6 — Persistence [ ]
+## Phase 6 — Persistence [x]
 
-- [ ] `exportSession.js` writes `.figaro.json` matching schema
-- [ ] `importSession.js` parses + validates
-- [ ] `LocateFilesDialog` walks datasets/imageRefs and rebinds files
-- [ ] Round-trip test (save → reopen → relocate → identical render)
+- [x] `exportSession.js` writes `.figaro.json` matching schema
+- [x] `importSession.js` parses + validates
+- [x] `LocateFilesDialog` walks datasets/imageRefs and rebinds files
+- [x] Round-trip test (save → reopen → relocate → identical render)
 
-## Phase 7 — Exports [ ]
+## Phase 7 — Exports [x]
 
 Order: SVG → PNG → HTML → PDF.
 
-- [ ] SVG export (composed master SVG with auto-labels as `<text>`)
-- [ ] PNG export (offscreen canvas at 2× DPI)
-- [ ] HTML export (self-contained with Plotly inline)
-- [ ] PDF export — bundled TTFs + jsPDF + svg2pdf.js + `<foreignObject>` fallback note
-- [ ] Export dialog with previews + format-specific options
+- [x] SVG export (composed master SVG with auto-labels as `<text>`)
+- [x] PNG export (offscreen canvas at 2× DPI)
+- [x] HTML export (self-contained with Plotly inline)
+- [x] PDF export — jsPDF + svg2pdf.js + `<foreignObject>` fallback note in dialog
+- [x] Export dialog with format tabs + PNG resolution selector
 
 ## Phase 8 — Network chart [ ]
 
