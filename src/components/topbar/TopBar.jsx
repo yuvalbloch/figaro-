@@ -40,10 +40,12 @@ export function TopBar() {
 
   return (
     <header className="h-12 shrink-0 border-b border-border bg-background flex items-center px-4 gap-4">
-      <div className="flex items-center gap-2">
-        <div className="h-5 w-5 rounded-sm bg-foreground" />
-        <span className="font-semibold tracking-tight">Figaro</span>
-      </div>
+      <img
+        src="/figaro_logo.svg"
+        alt="Figaro"
+        className="h-9 w-auto shrink-0"
+        draggable={false}
+      />
 
       <div className="flex-1 flex items-center justify-center">
         <span className="text-sm text-muted-foreground truncate max-w-[40ch]">{meta.name}</span>
