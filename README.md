@@ -1,6 +1,8 @@
 # Figaro
 
 **Live app:**https://yuvalbloch.github.io/figaro-/
+
+
 **User manual:** [MANUAL.md](MANUAL.md)
 
 A browser-based editor for composing multi-panel scientific figures. Build a grid layout, assign chart or image types to each panel, load your data, style the output, and export — all without leaving the browser.
