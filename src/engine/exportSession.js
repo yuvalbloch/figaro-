@@ -1,6 +1,29 @@
 import { SCHEMA_VERSION } from '@/persistence/schema';
 
-export function exportSession(state) {
+async function blobUrlToDataUrl(blobURL) {
+  const blob = await fetch(blobURL).then((r) => r.blob());
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+export async function exportSession(state) {
+  const fileData = {};
+  for (const [id, payload] of Object.entries(state._loaded || {})) {
+    if (payload?.rows?.length) {
+      fileData[id] = { type: 'dataset', rows: payload.rows };
+    } else if (payload?.blobURL) {
+      try {
+        fileData[id] = { type: 'image', dataUrl: await blobUrlToDataUrl(payload.blobURL) };
+      } catch {
+        // blob URL revoked or unavailable — skip silently
+      }
+    }
+  }
+
   const session = {
     schemaVersion: SCHEMA_VERSION,
     meta: { ...state.meta, modifiedAt: new Date().toISOString() },
@@ -13,6 +36,7 @@ export function exportSession(state) {
     theme: state.theme,
     labeling: state.labeling,
     customPalette: state.customPalette,
+    ...(Object.keys(fileData).length > 0 && { fileData }),
   };
 
   const blob = new Blob([JSON.stringify(session, null, 2)], { type: 'application/json' });

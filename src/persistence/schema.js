@@ -2,7 +2,7 @@
 // Reject session JSON that doesn't satisfy validateSession(); on success the
 // caller still needs to relocate dataset/image files (see LocateFilesDialog).
 
-export const SCHEMA_VERSION = '1.0.0';
+export const SCHEMA_VERSION = '1.1.0';
 
 export const CANVAS_PRESETS = {
   A4_portrait: { width: 210, height: 297, units: 'mm' },
@@ -56,9 +56,11 @@ export function validateSession(session) {
   }
 
   if (session.schemaVersion !== SCHEMA_VERSION) {
-    errors.push(
-      `Expected schemaVersion ${SCHEMA_VERSION}, got ${JSON.stringify(session.schemaVersion)}`
-    );
+    errors.push(`Expected schemaVersion ${SCHEMA_VERSION}, got ${JSON.stringify(session.schemaVersion)}`);
+  }
+
+  if ('fileData' in session && (typeof session.fileData !== 'object' || session.fileData === null || Array.isArray(session.fileData))) {
+    errors.push('fileData must be a plain object when present');
   }
 
   for (const key of [
@@ -85,9 +87,6 @@ export function validateSession(session) {
     for (const [pid, plot] of Object.entries(session.plots || {})) {
       if (plot.datasetId && !session.datasets[plot.datasetId]) {
         errors.push(`Plot ${pid} references missing dataset ${plot.datasetId}`);
-      }
-      if (plot.edgesDatasetId && !session.datasets[plot.edgesDatasetId]) {
-        errors.push(`Plot ${pid} references missing edges dataset ${plot.edgesDatasetId}`);
       }
     }
     for (const [rid, panel] of Object.entries(session.panels || {})) {

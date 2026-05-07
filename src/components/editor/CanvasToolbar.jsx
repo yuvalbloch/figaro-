@@ -1,12 +1,14 @@
 import { useStore } from '@/store';
 import { Button } from '@/components/ui/button';
-import { Combine, Maximize2 } from 'lucide-react';
+import { Combine, Maximize2, Minimize2 } from 'lucide-react';
 
 export function CanvasToolbar() {
   const mergeMode = useStore((s) => s.ui.mergeMode);
   const setMergeMode = useStore((s) => s.setMergeMode);
   const mergeFirstId = useStore((s) => s.ui.mergeFirstId);
   const requestCanvasFit = useStore((s) => s.requestCanvasFit);
+  const revertCanvasFit = useStore((s) => s.revertCanvasFit);
+  const canvasFitted = useStore((s) => s.ui.canvasFitted);
 
   return (
     <div className="h-10 shrink-0 flex items-center gap-2 px-3 border-b border-border bg-background">
@@ -26,10 +28,17 @@ export function CanvasToolbar() {
             : 'Click two cells that form a rectangle, or click a merged cell to split it.'}
         </span>
       )}
-      <Button variant="ghost" size="sm" onClick={requestCanvasFit} title="Fit canvas to view">
-        <Maximize2 className="h-4 w-4" />
-        Fit
-      </Button>
+      {canvasFitted ? (
+        <Button variant="ghost" size="sm" onClick={revertCanvasFit} title="Revert to original view">
+          <Minimize2 className="h-4 w-4" />
+          Revert
+        </Button>
+      ) : (
+        <Button variant="ghost" size="sm" onClick={requestCanvasFit} title="Fit canvas width to available space">
+          <Maximize2 className="h-4 w-4" />
+          Fit
+        </Button>
+      )}
     </div>
   );
 }

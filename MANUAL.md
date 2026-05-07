@@ -128,7 +128,7 @@ Below the chart-type buttons the Inspector shows a **Data** section. Each row ma
 - **Dropdowns** list the available columns. Numeric columns are marked with `·№`; text columns with `·𝐀`. Some channels (like X and Y axes) only show numeric columns.
 - Leaving an optional channel blank (e.g., Color/Group) renders the chart without that encoding.
 
-**Network charts** have an additional **Edges dataset** dropdown. Select a second loaded dataset that defines the edges; additional column pickers appear for the source and target node identifiers.
+**Network charts** use a single dataset where each row is an edge. Map **Source node** and **Target node** to the columns containing the node identifiers for each end of the edge. Optionally map **Edge weight** (numeric), **Color by** (groups nodes by a categorical column), and **Size by** (scales node size by a numeric column). Nodes are derived automatically from the unique values in the source and target columns.
 
 After changing any column mapping, the chart re-renders automatically if you are not in draft mode. If a **Draft** bar appears at the bottom of the Inspector, click **Apply** to commit, or **Reset** to undo your edits.
 
@@ -184,6 +184,15 @@ When an image panel is selected, the Inspector shows:
 - **Border** — set a border width (0–20 px) and border color
 
 Click **Clear panel** to remove the image and return the panel to the empty state.
+
+---
+
+## Canvas view controls
+
+The toolbar above the canvas has two view buttons:
+
+- **Fit** — scales the canvas to fill the full width of the canvas area (the space between the Data and Inspector sidebars). If the canvas becomes taller than the screen, the page scrolls and the sidebars remain visible alongside you as you scroll. The Fit button is replaced by a **Revert** button.
+- **Revert** — returns the canvas to the default fit-to-view mode, where the canvas is scaled to show all content within the available area without scrolling.
 
 ---
 
@@ -288,7 +297,15 @@ Click **Export [FORMAT]** to download the file. The file is named after the figu
 
 ## 16. Saving and opening sessions
 
-### Saving
+### Browser auto-save
+
+Figaro automatically saves your entire session — layout, plots, datasets, and images — to your browser's local storage (IndexedDB) roughly 1.5 seconds after each change. When you reopen the app in the same browser, the session is restored exactly as you left it, including all loaded data, so there is nothing to re-upload.
+
+A **Saved** indicator (cloud icon) appears next to the figure title in the top bar once the auto-save has run. Hovering over it shows the exact time of the last save.
+
+Auto-save is per-browser: it does not sync across devices or browsers. To share or back up a session, use the manual **Save** button described below.
+
+### Manual save (download to file)
 
 Click the **Save** button (disk icon) in the top bar. The current session downloads as a `.figaro.json` file. The file stores:
 

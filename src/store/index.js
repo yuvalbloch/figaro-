@@ -4,6 +4,7 @@ import { layoutSlice } from './layoutSlice';
 import { plotsSlice } from './plotsSlice';
 import { dataSlice } from './dataSlice';
 import { uiSlice } from './uiSlice';
+import { persistSession } from '@/persistence/idb';
 
 export const useStore = create((set, get) => ({
   meta: {
@@ -57,3 +58,32 @@ export const useStore = create((set, get) => ({
   ...dataSlice(set, get),
   ...uiSlice(set, get),
 }));
+
+// Auto-save to IndexedDB whenever meaningful state changes, debounced 1.5 s.
+let _saveTimer = null;
+useStore.subscribe((state, prev) => {
+  if (
+    state.meta === prev.meta &&
+    state.canvas === prev.canvas &&
+    state.layout === prev.layout &&
+    state.panels === prev.panels &&
+    state.plots === prev.plots &&
+    state.datasets === prev.datasets &&
+    state.imageRefs === prev.imageRefs &&
+    state.theme === prev.theme &&
+    state.labeling === prev.labeling &&
+    state.customPalette === prev.customPalette &&
+    state._loaded === prev._loaded
+  ) return;
+  if (!state.layout || state.layout.rows === 0) return;
+
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(async () => {
+    try {
+      await persistSession(useStore.getState());
+      useStore.getState().setIdbSavedAt(Date.now());
+    } catch {
+      // fail silently — browser storage unavailable or quota exceeded
+    }
+  }, 1500);
+});

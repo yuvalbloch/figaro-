@@ -20,7 +20,7 @@ const FORMATS = [
   {
     id: 'svg',
     label: 'SVG',
-    desc: 'Vector graphic — ideal for publications and further editing in Illustrator or Inkscape.',
+    desc: 'SVG layout with high-resolution raster plots — opens correctly in Illustrator and Inkscape.',
   },
   {
     id: 'png',

@@ -12,6 +12,8 @@ export const uiSlice = (set) => ({
     },
     draft: null,
     canvasFitTrigger: 0,
+    canvasFitted: false,
+    idbSavedAt: null,
   },
   selectRegion: (regionId) =>
     set((s) => ({ ui: { ...s.ui, selectedRegionId: regionId } })),
@@ -31,5 +33,8 @@ export const uiSlice = (set) => ({
     })),
   setDraft: (draft) => set((s) => ({ ui: { ...s.ui, draft } })),
   requestCanvasFit: () =>
-    set((s) => ({ ui: { ...s.ui, canvasFitTrigger: s.ui.canvasFitTrigger + 1 } })),
+    set((s) => ({ ui: { ...s.ui, canvasFitTrigger: s.ui.canvasFitTrigger + 1, canvasFitted: true } })),
+  revertCanvasFit: () =>
+    set((s) => ({ ui: { ...s.ui, canvasFitTrigger: s.ui.canvasFitTrigger + 1, canvasFitted: false } })),
+  setIdbSavedAt: (ts) => set((s) => ({ ui: { ...s.ui, idbSavedAt: ts } })),
 });

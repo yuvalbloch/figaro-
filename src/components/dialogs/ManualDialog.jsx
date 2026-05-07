@@ -93,7 +93,7 @@ export function ManualDialog() {
           <H3>From your own files</H3>
           <P>Click the <strong>+</strong> button at the top of the Data sidebar. Accepted formats: <Code>.csv</Code>, <Code>.tsv</Code>, <Code>.json</Code>, <Code>.txt</Code>. You can select multiple files at once. Each dataset appears as a card showing row/column counts and column names — blue badges for numeric columns, gray badges for text columns.</P>
           <H3>From built-in examples</H3>
-          <P>Click <strong>Load examples</strong> to add three sample datasets: Iris, Gapminder, and Sales.</P>
+          <P>Click <strong>Load examples</strong> to add sample datasets: Iris, Hare &amp; Lynx, Darwin's Finches, and Dolphin Social Network.</P>
           <H3>Removing a dataset</H3>
           <P>Click the trash icon on a dataset card. Any plots bound to that dataset will lose their data.</P>
 

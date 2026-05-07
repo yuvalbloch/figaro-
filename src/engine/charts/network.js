@@ -47,20 +47,11 @@ export const networkChart = {
   label: 'Network',
   schema: {
     data: [
-      { key: 'nodeId', kind: 'column', label: 'Node ID', required: true },
+      { key: 'edgeSource', kind: 'column', label: 'Source node', required: true },
+      { key: 'edgeTarget', kind: 'column', label: 'Target node', required: true },
+      { key: 'edgeWeight', kind: 'column', label: 'Edge weight', filter: 'number', optional: true },
       { key: 'nodeColor', kind: 'column', label: 'Color by', optional: true },
       { key: 'nodeSize', kind: 'column', label: 'Size by', filter: 'number', optional: true },
-      // Edge columns — rendered against edgesDatasetId
-      { key: 'edgeSource', kind: 'column', label: 'Edge source', edgeColumn: true },
-      { key: 'edgeTarget', kind: 'column', label: 'Edge target', edgeColumn: true },
-      {
-        key: 'edgeWeight',
-        kind: 'column',
-        label: 'Edge weight',
-        filter: 'number',
-        optional: true,
-        edgeColumn: true,
-      },
     ],
     style: [
       { key: 'nodeSize', kind: 'number', label: 'Node size', min: 4, max: 40, step: 1 },
@@ -95,14 +86,14 @@ export const networkChart = {
 
   render(plot, rows, ctx) {
     const warnings = [];
-    const { nodeId, nodeColor, nodeSize: nodeSizeCol, edgeSource, edgeTarget, edgeWeight } =
+    const { nodeColor, nodeSize: nodeSizeCol, edgeSource, edgeTarget, edgeWeight } =
       plot.params || {};
 
-    if (!nodeId) {
+    if (!edgeSource || !edgeTarget) {
       return {
         data: [],
         layout: baseLayout(plot, ctx.theme),
-        warnings: ['Pick a Node ID column'],
+        warnings: ['Pick Source node and Target node columns'],
       };
     }
 
@@ -114,41 +105,40 @@ export const networkChart = {
     const layoutVersion = plot.params?.layoutVersion || 0;
     const plotId = ctx.plotId || '__default__';
 
-    // Collect node IDs and per-node attributes
-    const nodeAttrMap = new Map();
+    // Build edges and collect per-node attributes from the single dataset
+    const edges = [];
+    const nodeColorMap = new Map();
+    const nodeSizeMap = new Map();
     for (const r of rows) {
-      const id = String(r[nodeId] ?? '');
-      if (!id) continue;
-      if (!nodeAttrMap.has(id)) {
-        nodeAttrMap.set(id, {
-          color: nodeColor ? r[nodeColor] : null,
-          size: nodeSizeCol ? Number(r[nodeSizeCol]) : null,
-        });
-      }
+      const src = String(r[edgeSource] ?? '');
+      const tgt = String(r[edgeTarget] ?? '');
+      if (!src || !tgt) continue;
+      edges.push({ source: src, target: tgt, weight: edgeWeight ? Number(r[edgeWeight]) : 1 });
+      if (nodeColor && !nodeColorMap.has(src)) nodeColorMap.set(src, r[nodeColor]);
+      if (nodeSizeCol && !nodeSizeMap.has(src)) nodeSizeMap.set(src, Number(r[nodeSizeCol]));
     }
-    const nodeIds = [...nodeAttrMap.keys()];
+
+    // Derive unique node set from edge endpoints
+    const nodeIdSet = new Set();
+    for (const e of edges) { nodeIdSet.add(e.source); nodeIdSet.add(e.target); }
+    const nodeIds = [...nodeIdSet];
+
+    const nodeAttrMap = new Map();
+    for (const id of nodeIds) {
+      nodeAttrMap.set(id, {
+        color: nodeColorMap.get(id) ?? null,
+        size: nodeSizeMap.get(id) ?? null,
+      });
+    }
 
     if (nodeIds.length === 0) {
       return {
         data: [],
         layout: baseLayout(plot, ctx.theme),
-        warnings: ['No valid node IDs found'],
+        warnings: ['No valid node pairs found in dataset'],
       };
     }
     if (nodeIds.length > 2000) warnings.push(`Large network: ${nodeIds.length} nodes`);
-
-    // Build edge list from edges dataset rows
-    const edgesRows = ctx.edgesRows || [];
-    const edges = [];
-    if (edgeSource && edgeTarget && edgesRows.length > 0) {
-      for (const r of edgesRows) {
-        const src = String(r[edgeSource] ?? '');
-        const tgt = String(r[edgeTarget] ?? '');
-        if (src && tgt) {
-          edges.push({ source: src, target: tgt, weight: edgeWeight ? Number(r[edgeWeight]) : 1 });
-        }
-      }
-    }
 
     // Compute or retrieve cached positions
     const nodeSetKey = nodeIds.join('\x00');
@@ -228,15 +218,23 @@ export const networkChart = {
     }
     traces.push(...nodeTraces);
 
+    // Compute tight bounds from actual node positions
+    const allX = nodeIds.map((id) => positions.get(id)?.x ?? 0);
+    const allY = nodeIds.map((id) => positions.get(id)?.y ?? 0);
+    const minX = Math.min(...allX), maxX = Math.max(...allX);
+    const minY = Math.min(...allY), maxY = Math.max(...allY);
+    const padX = (maxX - minX) * 0.08 || 0.5;
+    const padY = (maxY - minY) * 0.08 || 0.5;
+
     const layout = baseLayout(plot, ctx.theme);
-    // Hide axes — network plots have no meaningful coordinate frame
-    layout.xaxis = { ...layout.xaxis, visible: false, showgrid: false, zeroline: false };
+    layout.margin = { l: 8, r: 8, t: plot.style?.title ? 36 : 8, b: 8 };
+    layout.xaxis = {
+      visible: false, showgrid: false, zeroline: false, automargin: false,
+      range: [minX - padX, maxX + padX],
+    };
     layout.yaxis = {
-      ...layout.yaxis,
-      visible: false,
-      showgrid: false,
-      zeroline: false,
-      scaleanchor: 'x',
+      visible: false, showgrid: false, zeroline: false, automargin: false,
+      range: [minY - padY, maxY + padY],
     };
     layout.hovermode = 'closest';
 

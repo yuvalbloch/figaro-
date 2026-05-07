@@ -36,8 +36,8 @@ function escXml(s) {
     .replace(/"/g, '&quot;');
 }
 
-// plotFormat: 'svg' for clean vector output, 'png' for PDF-compatible raster embed.
-export async function toSvg(state, { plotFormat = 'svg' } = {}) {
+// plotFormat: 'png' for Inkscape/PDF-compatible raster embed, 'svg' for browser-only vector embed.
+export async function toSvg(state, { plotFormat = 'png' } = {}) {
   const { canvas, layout, panels, imageRefs, labeling } = state;
   const { w: widthPx, h: heightPx } = canvasSizePx(canvas);
   const rects = computePanelRects(layout, widthPx, heightPx);
@@ -66,7 +66,7 @@ export async function toSvg(state, { plotFormat = 'svg' } = {}) {
             height: Math.round(h),
           });
           parts.push(
-            `<image x="${x}" y="${y}" width="${w}" height="${h}" href="${dataUrl}" preserveAspectRatio="none"/>`
+            `<image x="${x}" y="${y}" width="${w}" height="${h}" xlink:href="${dataUrl}" href="${dataUrl}" preserveAspectRatio="none"/>`
           );
         } catch {
           parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f0f0f0"/>`);
@@ -80,7 +80,7 @@ export async function toSvg(state, { plotFormat = 'svg' } = {}) {
         try {
           const dataUrl = await blobUrlToDataUrl(imgLoaded.blobURL);
           parts.push(
-            `<image x="${x}" y="${y}" width="${w}" height="${h}" href="${dataUrl}" preserveAspectRatio="xMidYMid meet"/>`
+            `<image x="${x}" y="${y}" width="${w}" height="${h}" xlink:href="${dataUrl}" href="${dataUrl}" preserveAspectRatio="xMidYMid meet"/>`
           );
         } catch {
           parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f0f0f0"/>`);

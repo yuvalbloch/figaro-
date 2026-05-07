@@ -15,6 +15,7 @@ export function Canvas() {
   const openDialog = useStore((s) => s.openDialog);
   const selectRegion = useStore((s) => s.selectRegion);
   const fitTrigger = useStore((s) => s.ui.canvasFitTrigger);
+  const canvasFitted = useStore((s) => s.ui.canvasFitted);
 
   const containerRef = useRef(null);
   const surfaceRef = useRef(null);
@@ -27,16 +28,22 @@ export function Canvas() {
     if (!containerRef.current || layout.rows === 0) return;
     const margin = 64;
     const compute = (rect) => {
-      if (!rect.width || !rect.height) return;
-      const sx = (rect.width - margin) / widthPx;
-      const sy = (rect.height - margin) / heightPx;
-      setScale(Math.min(Math.max(sx, 0.05), Math.max(sy, 0.05), 1));
+      if (!rect.width) return;
+      if (canvasFitted) {
+        const sx = (rect.width - margin) / widthPx;
+        setScale(Math.max(sx, 0.05));
+      } else {
+        if (!rect.height) return;
+        const sx = (rect.width - margin) / widthPx;
+        const sy = (rect.height - margin) / heightPx;
+        setScale(Math.min(Math.max(sx, 0.05), Math.max(sy, 0.05), 1));
+      }
     };
     compute(containerRef.current.getBoundingClientRect());
     const observer = new ResizeObserver(([entry]) => compute(entry.contentRect));
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [widthPx, heightPx, layout.rows, fitTrigger]);
+  }, [widthPx, heightPx, layout.rows, fitTrigger, canvasFitted]);
 
   const labels = useMemo(
     () => computeAutoLabels(layout.regions, labeling.style),
@@ -61,14 +68,16 @@ export function Canvas() {
   }
 
   return (
-    <div className="h-full w-full flex flex-col">
-      <CanvasToolbar />
+    <div className={canvasFitted ? 'w-full flex flex-col' : 'h-full w-full flex flex-col'}>
+      <div className={canvasFitted ? 'sticky top-0 z-10' : ''}>
+        <CanvasToolbar />
+      </div>
       <div
         ref={containerRef}
-        className="flex-1 overflow-auto bg-neutral-100"
+        className={`${canvasFitted ? 'w-full' : 'flex-1 overflow-auto'} bg-neutral-100`}
         onClick={() => selectRegion(null)}
       >
-        <div className="min-h-full flex items-center justify-center p-8">
+        <div className={canvasFitted ? 'p-8 flex justify-center' : 'min-h-full flex items-center justify-center p-8'}>
           <div
             style={{ width: widthPx * scale, height: heightPx * scale }}
             onClick={(e) => e.stopPropagation()}
