@@ -10,6 +10,9 @@ export function PlotEngine({ regionId, plotId }) {
   const plot = useStore((s) => s.plots[plotId]);
   const dataset = useStore((s) => (plot?.datasetId ? s.datasets[plot.datasetId] : null));
   const rows = useStore((s) => (plot?.datasetId ? s._loaded[plot.datasetId]?.rows : null));
+  const edgesRows = useStore((s) =>
+    plot?.edgesDatasetId ? s._loaded[plot.edgesDatasetId]?.rows ?? null : null
+  );
   const theme = useStore((s) => s.theme);
   const customPalette = useStore((s) => s.customPalette);
   const sharedX = useStore((s) =>
@@ -35,13 +38,13 @@ export function PlotEngine({ regionId, plotId }) {
       return;
     }
 
-    const result = chart.render(plot, rows, { theme, customPalette });
+    const result = chart.render(plot, rows, { theme, customPalette, plotId, edgesRows: edgesRows || [] });
     if (sharedX) result.layout.xaxis = { ...(result.layout.xaxis || {}), range: sharedX, autorange: false };
     if (sharedY) result.layout.yaxis = { ...(result.layout.yaxis || {}), range: sharedY, autorange: false };
 
     setWarnings(result.warnings || []);
     Plotly.react(ref.current, result.data, result.layout, baseConfig);
-  }, [plot, dataset, rows, theme, customPalette, sharedX, sharedY]);
+  }, [plot, dataset, rows, edgesRows, theme, customPalette, sharedX, sharedY, plotId]);
 
   useEffect(() => {
     const el = ref.current;

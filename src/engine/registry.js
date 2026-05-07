@@ -4,6 +4,7 @@ import { histogramChart } from './charts/histogram';
 import { scatterChart } from './charts/scatter';
 import { pieChart } from './charts/pie';
 import { heatmapChart } from './charts/heatmap';
+import { networkChart } from './charts/network';
 
 const CHARTS = {
   bar: barChart,
@@ -12,6 +13,7 @@ const CHARTS = {
   scatter: scatterChart,
   pie: pieChart,
   heatmap: heatmapChart,
+  network: networkChart,
 };
 
 export function getChart(type) {

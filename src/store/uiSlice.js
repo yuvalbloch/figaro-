@@ -8,6 +8,7 @@ export const uiSlice = (set) => ({
       newSession: false,
       locateFiles: false,
       export: false,
+      manual: false,
     },
     draft: null,
     canvasFitTrigger: 0,

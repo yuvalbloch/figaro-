@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Field } from './fields';
 import { getChart, listCharts } from '@/engine/registry';
-import { Trash2, Check, Undo2 } from 'lucide-react';
+import { Trash2, Check, Undo2, Shuffle } from 'lucide-react';
 
 const CHART_TYPES = listCharts();
 
@@ -19,6 +19,7 @@ function applyDefaults(plot, chart) {
 export function PlotInspector({ regionId, panel }) {
   const plot = useStore((s) => s.plots[panel.plotId]);
   const dataset = useStore((s) => (plot?.datasetId ? s.datasets[plot.datasetId] : null));
+  const allDatasets = useStore((s) => s.datasets);
   const draft = useStore((s) => s.ui.draft);
   const setDraft = useStore((s) => s.setDraft);
   const setPlot = useStore((s) => s.setPlot);
@@ -120,7 +121,8 @@ export function PlotInspector({ regionId, panel }) {
 
       <div className="space-y-2 pt-3 border-t border-border">
         <Label className="text-xs uppercase tracking-wider text-muted-foreground">Data</Label>
-        {chart.schema.data.map((f) => (
+        {/* Node-level columns (from primary dataset) */}
+        {chart.schema.data.filter((f) => !f.edgeColumn).map((f) => (
           <Field
             key={f.key}
             field={f}
@@ -129,6 +131,38 @@ export function PlotInspector({ regionId, panel }) {
             datasetId={plot.datasetId}
           />
         ))}
+
+        {/* Edges dataset picker (network only) */}
+        {chart.type === 'network' && (
+          <div className="space-y-1 pt-2">
+            <Label className="text-xs text-muted-foreground">Edges dataset</Label>
+            <select
+              value={plot.edgesDatasetId || ''}
+              onChange={(e) => patchPlot(panel.plotId, { edgesDatasetId: e.target.value || null })}
+              className="flex h-9 w-full rounded-md border border-input bg-background px-2 text-sm shadow-sm"
+            >
+              <option value="">None</option>
+              {Object.values(allDatasets).map((ds) => (
+                <option key={ds.id} value={ds.id}>
+                  {ds.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Edge-level columns (from edges dataset) */}
+        {chart.type === 'network' && plot.edgesDatasetId && (
+          chart.schema.data.filter((f) => f.edgeColumn).map((f) => (
+            <Field
+              key={f.key}
+              field={f}
+              value={effective.params?.[f.key] ?? null}
+              onChange={(v) => updateParam(f.key, v)}
+              datasetId={plot.edgesDatasetId}
+            />
+          ))
+        )}
       </div>
 
       <div className="space-y-2 pt-3 border-t border-border">
@@ -141,6 +175,22 @@ export function PlotInspector({ regionId, panel }) {
             onChange={(v) => updateStyle(f.key, v)}
           />
         ))}
+        {chart.type === 'network' && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full mt-1"
+            onClick={() => {
+              const next = ((plot.params?.layoutVersion || 0) + 1);
+              patchPlot(panel.plotId, {
+                params: { ...(plot.params || {}), layoutVersion: next },
+              });
+            }}
+          >
+            <Shuffle className="h-3.5 w-3.5" />
+            Re-layout
+          </Button>
+        )}
       </div>
 
       <div className="space-y-2 pt-3 border-t border-border">

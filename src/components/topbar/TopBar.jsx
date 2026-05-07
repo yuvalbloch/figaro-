@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/store';
 import { THEME_DATA } from '@/themes/themes';
-import { FilePlus2, FolderOpen, Save, Download } from 'lucide-react';
+import { FilePlus2, FolderOpen, Save, Download, CircleHelp } from 'lucide-react';
 import { exportSession } from '@/engine/exportSession';
 import { importSession } from '@/engine/importSession';
 
@@ -50,6 +50,16 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => openDialog('manual')}
+          title="User manual"
+          className="h-8 w-8 text-muted-foreground"
+        >
+          <CircleHelp className="h-4 w-4" />
+        </Button>
+
         <select
           value={theme.name}
           onChange={handleThemeChange}

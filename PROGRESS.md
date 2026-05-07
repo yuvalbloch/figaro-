@@ -1,6 +1,6 @@
 # Figaro — Progress Tracker
 
-Last updated: 2026-05-06 (Phase 7 complete)
+Last updated: 2026-05-06 (Phase 8 complete)
 
 ## Run the app
 
@@ -99,13 +99,13 @@ Order: SVG → PNG → HTML → PDF.
 - [x] PDF export — jsPDF + svg2pdf.js + `<foreignObject>` fallback note in dialog
 - [x] Export dialog with format tabs + PNG resolution selector
 
-## Phase 8 — Network chart [ ]
+## Phase 8 — Network chart [x]
 
-- [ ] Edges dataset picker in control panel
-- [ ] d3-force layout (force-directed + circular fallback)
-- [ ] Plotly traces: nodes (scatter) + edges (lines)
-- [ ] Re-layout button + cached positions
-- [ ] Node label toggle, sizing, edge opacity
+- [x] Edges dataset picker in control panel
+- [x] d3-force layout (force-directed + circular fallback)
+- [x] Plotly traces: nodes (scatter) + edges (lines)
+- [x] Re-layout button + cached positions
+- [x] Node label toggle, sizing, edge opacity
 
 ## Phase 9 — Polish [ ]
 

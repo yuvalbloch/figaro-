@@ -47,7 +47,7 @@ export const useStore = create((set, get) => ({
         hoverRegionId: null,
         mergeMode: false,
         mergeFirstId: null,
-        dialogs: { newSession: false, locateFiles: false, export: false },
+        dialogs: { newSession: false, locateFiles: false, export: false, manual: false },
         draft: null,
       },
     })),

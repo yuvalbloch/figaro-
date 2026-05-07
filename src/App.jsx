@@ -5,6 +5,7 @@ import { ControlPanel } from '@/components/controls/ControlPanel';
 import { NewSessionDialog } from '@/components/dialogs/NewSessionDialog';
 import { LocateFilesDialog } from '@/components/dialogs/LocateFilesDialog';
 import { ExportDialog } from '@/components/dialogs/ExportDialog';
+import { ManualDialog } from '@/components/dialogs/ManualDialog';
 import { CanvasDndProvider } from '@/components/editor/CanvasDndProvider';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
         <NewSessionDialog />
         <LocateFilesDialog />
         <ExportDialog />
+        <ManualDialog />
       </div>
     </CanvasDndProvider>
   );
