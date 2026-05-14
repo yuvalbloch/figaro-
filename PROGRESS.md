@@ -1,6 +1,6 @@
 # Figaro — Progress Tracker
 
-Last updated: 2026-05-06 (Phase 8 complete)
+Last updated: 2026-05-14 (Phase 9 styling features)
 
 ## Run the app
 
@@ -107,9 +107,16 @@ Order: SVG → PNG → HTML → PDF.
 - [x] Re-layout button + cached positions
 - [x] Node label toggle, sizing, edge opacity
 
-## Phase 9 — Polish [ ]
+## Phase 9 — Polish [~]
 
 - [x] `public/examples/` with 3 example CSVs + "Load example" button (delivered in Phase 3)
+- [x] Per-element font size sliders — title, axis labels, tick labels, legend each have an independent size slider; null = auto (scales from base font size)
+- [x] Title position slider — horizontal drag-to-position slider (0 = left, 1 = right); also saved automatically when Plotly fires a relayout event
+- [x] Legend drag & save — drag the legend anywhere on the chart; position is persisted in the plot style and restored on re-render
+- [x] Click-to-highlight — clicking a plot element (title, axis label, ticks, legend) highlights the relevant Inspector controls with a ring and scrolls to them
+- [x] 4-style visual font picker — 2×2 button grid showing "Aa" in Inter (Sans), Merriweather (Serif), IBM Plex Mono (Mono), Lato (Round)
+- [x] Inner plot border toggle — "Plot border" checkbox draws a box frame around the plot area via Plotly `mirror` axes
+- [x] Logo updated — replaced figaro_logo.svg with figaro_logo2.png at 60 px height in a 72 px top bar
 - [ ] Walk through every acceptance criterion in spec §14
 - [ ] Performance pass on 10k-row dataset
 - [ ] Sweep code for `TODO(v2)` markers on out-of-scope items

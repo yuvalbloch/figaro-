@@ -11,6 +11,7 @@ export const uiSlice = (set) => ({
       manual: false,
     },
     draft: null,
+    highlightedControl: null,
     canvasFitTrigger: 0,
     canvasFitted: false,
     idbSavedAt: null,
@@ -32,6 +33,7 @@ export const uiSlice = (set) => ({
       ui: { ...s.ui, dialogs: { ...s.ui.dialogs, [name]: false } },
     })),
   setDraft: (draft) => set((s) => ({ ui: { ...s.ui, draft } })),
+  setHighlightedControl: (key) => set((s) => ({ ui: { ...s.ui, highlightedControl: key } })),
   requestCanvasFit: () =>
     set((s) => ({ ui: { ...s.ui, canvasFitTrigger: s.ui.canvasFitTrigger + 1, canvasFitted: true } })),
   revertCanvasFit: () =>

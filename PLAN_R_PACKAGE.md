@@ -132,9 +132,9 @@ Package: figaro
 Title: Interactive Scientific Figure Composer
 Version: 0.1.0
 Authors@R: c(
-    person("Yuval", "Bloch", role = c("aut", "cre"), email = ""),
+    person("Yuval", "Bloch", role = "aut"),
     person("Kesem", "Abramov", role = "aut"),
-    person("Nathan", "Edelman", role = "aut"))
+    person("Natan", "Edelman", role = "aut"))
 Imports: jsonlite, httpuv, utils
 Suggests: ggplot2, pdftools, png, testthat (>= 3.0.0)
 License: MIT
