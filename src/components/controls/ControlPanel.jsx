@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { SlidersHorizontal, Trash2 } from 'lucide-react';
 import { PlotInspector } from './PlotInspector';
+import { RPlotStyleInspector } from './RPlotStyleInspector';
 
 function PanelLabelEditor({ regionId, panel }) {
   const setPanel = useStore((s) => s.setPanel);
@@ -189,7 +190,10 @@ export function ControlPanel() {
               <PlotInspector regionId={selectedRegionId} panel={panel} />
             )}
             {panel?.type === 'image' && (
-              <ImageInspector regionId={selectedRegionId} panel={panel} />
+              <>
+                <ImageInspector regionId={selectedRegionId} panel={panel} />
+                <RPlotStyleInspector regionId={selectedRegionId} panel={panel} />
+              </>
             )}
           </>
         )}

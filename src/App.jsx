@@ -17,8 +17,20 @@ export default function App() {
   const loadSession = useStore((s) => s.loadSession);
   const attachLoaded = useStore((s) => s.attachLoaded);
   const setIdbSavedAt = useStore((s) => s.setIdbSavedAt);
+  const requestCanvasFit = useStore((s) => s.requestCanvasFit);
 
   useEffect(() => {
+    const injected = window.__FIGARO_INITIAL_SESSION__;
+    if (injected) {
+      const { session, loaded } = injected;
+      loadSession(session);
+      for (const [fileId, payload] of Object.entries(loaded || {})) {
+        attachLoaded(fileId, payload);
+      }
+      requestCanvasFit();
+      return;
+    }
+
     restoreSession()
       .then((result) => {
         if (!result) return;
