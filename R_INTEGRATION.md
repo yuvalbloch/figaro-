@@ -57,15 +57,15 @@ The package is not on CRAN. Load it directly from the local source tree using
 `devtools`:
 
 ```r
-install.packages("devtools")           # once, if not already installed
-devtools::load_all("path/to/figaro-r") # loads package into your session
+install.packages("devtools")                    # once, if not already installed
+devtools::load_all("path/to/figaro-/figaro-r")  # loads package into your session
 ```
 
-Replace `path/to/figaro-r` with the actual path, for example:
+Replace `path/to/figaro-` with the root of your local clone, for example:
 
 ```r
-devtools::load_all("c:/GitHub/figaro-r")   # Windows
-devtools::load_all("~/projects/figaro-r")  # macOS / Linux
+devtools::load_all("c:/GitHub/figaro-/figaro-r")   # Windows
+devtools::load_all("~/projects/figaro-/figaro-r")  # macOS / Linux
 ```
 
 Re-run `load_all` after editing any R source file to pick up changes.
@@ -73,7 +73,7 @@ Re-run `load_all` after editing any R source file to pick up changes.
 To do a permanent local install so that `library(figaro)` works in any session:
 
 ```r
-devtools::install("path/to/figaro-r")
+devtools::install("path/to/figaro-/figaro-r")
 ```
 
 ---
@@ -274,14 +274,14 @@ npm run build:r          # outputs to dist-r/
 ```
 
 ```bash
-# 2. Copy the build into the R package
-cp -r dist-r/. path/to/figaro-r/inst/www/
+# 2. Copy the build into the R package (run from the figaro- directory)
+cp -r dist-r/. figaro-r/inst/www/
 ```
 
 Then reload the package:
 
 ```r
-devtools::load_all("path/to/figaro-r")
+devtools::load_all("path/to/figaro-/figaro-r")
 ```
 
 ---
