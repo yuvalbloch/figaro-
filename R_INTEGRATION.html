@@ -439,24 +439,42 @@ bundle</a></li>
 </div>
 <div id="installation" class="section level2">
 <h2>2. Installation</h2>
-<p>The package is not on CRAN. Load it directly from the local source
-tree using <code>devtools</code>:</p>
-<pre class="r"><code>install.packages(&quot;devtools&quot;)           # once, if not already installed
-devtools::load_all(&quot;path/to/figaro-r&quot;) # loads package into your session</code></pre>
-<p>Replace <code>path/to/figaro-r</code> with the actual path, for
-example:</p>
-<pre class="r"><code>devtools::load_all(&quot;c:/GitHub/figaro-r&quot;)   # Windows
-devtools::load_all(&quot;~/projects/figaro-r&quot;)  # macOS / Linux</code></pre>
-<p>Re-run <code>load_all</code> after editing any R source file to pick
-up changes.</p>
-<p>To do a permanent local install so that <code>library(figaro)</code>
-works in any session:</p>
-<pre class="r"><code>devtools::install(&quot;path/to/figaro-r&quot;)</code></pre>
+<p>The package lives inside the Figaro repository and is not available
+on CRAN. The steps are: <strong>clone the repo → point
+<code>devtools</code> at the <code>figaro-r</code>
+subfolder</strong>.</p>
+<div id="step-1-clone-the-repository" class="section level3">
+<h3>Step 1 — Clone the repository</h3>
+<pre class="bash"><code>git clone https://github.com/yuvalbloch/figaro-.git</code></pre>
+<p>This creates a <code>figaro-</code> folder in your current working
+directory. The R package source is at <code>figaro-/figaro-r/</code>
+inside that folder.</p>
+</div>
+<div id="step-2-load-the-package-in-r" class="section level3">
+<h3>Step 2 — Load the package in R</h3>
+<pre class="r"><code>install.packages(&quot;devtools&quot;)  # once, if not already installed
+
+# Replace the path below with wherever you cloned the repo:
+devtools::load_all(&quot;C:/GitHub/figaro-/figaro-r&quot;)   # Windows example
+devtools::load_all(&quot;~/projects/figaro-/figaro-r&quot;)  # macOS / Linux example</code></pre>
+<p><code>load_all</code> reads the R source files directly — no build
+step or install needed. All exported functions (<code>figaro</code>,
+<code>figaro_stop</code>, etc.) become available immediately in your R
+session. Re-run <code>load_all</code> any time you pull new changes.</p>
+</div>
+<div id="optional-permanent-install" class="section level3">
+<h3>Optional: permanent install</h3>
+<p>If you want <code>library(figaro)</code> to work in every new R
+session without calling <code>load_all</code> each time:</p>
+<pre class="r"><code>devtools::install(&quot;C:/GitHub/figaro-/figaro-r&quot;)
+# Then in any session:
+library(figaro)</code></pre>
 <hr />
+</div>
 </div>
 <div id="basic-usage" class="section level2">
 <h2>3. Basic usage</h2>
-<pre class="r"><code>devtools::load_all(&quot;path/to/figaro-r&quot;)
+<pre class="r"><code>devtools::load_all(&quot;C:/GitHub/figaro-/figaro-r&quot;)  # adjust path to your clone
 
 figaro(iris = iris)
 # → browser opens at http://localhost:&lt;PORT&gt;
@@ -637,10 +655,10 @@ copy:</p>
 <pre class="bash"><code>cd path/to/figaro-
 npm install
 npm run build:r          # outputs to dist-r/</code></pre>
-<pre class="bash"><code># 2. Copy the build into the R package
-cp -r dist-r/. path/to/figaro-r/inst/www/</code></pre>
+<pre class="bash"><code># 2. Copy the build into the R package (run from the figaro- directory)
+cp -r dist-r/. figaro-r/inst/www/</code></pre>
 <p>Then reload the package:</p>
-<pre class="r"><code>devtools::load_all(&quot;path/to/figaro-r&quot;)</code></pre>
+<pre class="r"><code>devtools::load_all(&quot;path/to/figaro-/figaro-r&quot;)</code></pre>
 <hr />
 </div>
 <div id="reference" class="section level2">

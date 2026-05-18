@@ -8,10 +8,25 @@ Pass data frames, ggplot2 objects, base-R plots, or image files directly from yo
 
 ## Quick start
 
-```r
-# Load the package from source (no CRAN install needed)
-devtools::load_all("path/to/figaro-/figaro-r")
+**1. Clone the repository** (the R package lives inside it):
 
+```bash
+git clone https://github.com/yuvalbloch/figaro-.git
+```
+
+**2. Load the package in R** — no CRAN install, no build step:
+
+```r
+install.packages("devtools")  # once, if not already installed
+
+# Point load_all at the figaro-r subfolder inside your clone:
+devtools::load_all("C:/GitHub/figaro-/figaro-r")   # Windows
+devtools::load_all("~/projects/figaro-/figaro-r")  # macOS / Linux
+```
+
+**3. Use it:**
+
+```r
 # Data frame — user builds charts interactively in the browser
 figaro(iris = iris)
 

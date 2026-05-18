@@ -53,27 +53,41 @@ Optional R packages (install only what you need):
 
 ## 2. Installation
 
-The package is not on CRAN. Load it directly from the local source tree using
-`devtools`:
+The package lives inside the Figaro repository and is not available on CRAN.
+The steps are: **clone the repo → point `devtools` at the `figaro-r` subfolder**.
 
-```r
-install.packages("devtools")                    # once, if not already installed
-devtools::load_all("path/to/figaro-/figaro-r")  # loads package into your session
+### Step 1 — Clone the repository
+
+```bash
+git clone https://github.com/yuvalbloch/figaro-.git
 ```
 
-Replace `path/to/figaro-` with the root of your local clone, for example:
+This creates a `figaro-` folder in your current working directory.
+The R package source is at `figaro-/figaro-r/` inside that folder.
+
+### Step 2 — Load the package in R
 
 ```r
-devtools::load_all("c:/GitHub/figaro-/figaro-r")   # Windows
-devtools::load_all("~/projects/figaro-/figaro-r")  # macOS / Linux
+install.packages("devtools")  # once, if not already installed
+
+# Replace the path below with wherever you cloned the repo:
+devtools::load_all("C:/GitHub/figaro-/figaro-r")   # Windows example
+devtools::load_all("~/projects/figaro-/figaro-r")  # macOS / Linux example
 ```
 
-Re-run `load_all` after editing any R source file to pick up changes.
+`load_all` reads the R source files directly — no build step or install needed.
+All exported functions (`figaro`, `figaro_stop`, etc.) become available
+immediately in your R session. Re-run `load_all` any time you pull new changes.
 
-To do a permanent local install so that `library(figaro)` works in any session:
+### Optional: permanent install
+
+If you want `library(figaro)` to work in every new R session without calling
+`load_all` each time:
 
 ```r
-devtools::install("path/to/figaro-/figaro-r")
+devtools::install("C:/GitHub/figaro-/figaro-r")
+# Then in any session:
+library(figaro)
 ```
 
 ---
@@ -81,7 +95,7 @@ devtools::install("path/to/figaro-/figaro-r")
 ## 3. Basic usage
 
 ```r
-devtools::load_all("path/to/figaro-r")
+devtools::load_all("C:/GitHub/figaro-/figaro-r")  # adjust path to your clone
 
 figaro(iris = iris)
 # → browser opens at http://localhost:<PORT>
