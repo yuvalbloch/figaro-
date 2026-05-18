@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/figaro_logo_v2.png" alt="Figaro logo" height="250">
+</p>
+
 # Figaro — R Integration Guide
 
 The `figaro` R package lets you pass data frames, ggplot2 objects, base-R plots,
