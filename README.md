@@ -1,4 +1,6 @@
-# Figaro
+<p align="center">
+  <img src="public/figaro_logo_v2.png" alt="Figaro logo" height="250">
+</p>
 
 **Live app:**https://yuvalbloch.github.io/figaro-/
 
