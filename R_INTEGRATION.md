@@ -57,8 +57,7 @@ Optional R packages (install only what you need):
 
 ## 2. Installation
 
-The package lives inside the Figaro repository and is not available on CRAN.
-The steps are: **clone the repo → point `devtools` at the `figaro-r` subfolder**.
+The package lives inside the Figaro repository and is not on CRAN.
 
 ### Step 1 — Clone the repository
 
@@ -66,32 +65,43 @@ The steps are: **clone the repo → point `devtools` at the `figaro-r` subfolder
 git clone https://github.com/yuvalbloch/figaro-.git
 ```
 
-This creates a `figaro-` folder in your current working directory.
-The R package source is at `figaro-/figaro-r/` inside that folder.
+This creates a `figaro-` folder wherever you run the command.
 
-### Step 2 — Load the package in R
+### Step 2 — Run the installer
+
+Open R or RStudio, set your working directory to the cloned `figaro-` folder,
+then run:
 
 ```r
-install.packages("devtools")  # once, if not already installed
-
-# Replace the path below with wherever you cloned the repo:
-devtools::load_all("C:/GitHub/figaro-/figaro-r")   # Windows example
-devtools::load_all("~/projects/figaro-/figaro-r")  # macOS / Linux example
+source("install.R")
 ```
 
-`load_all` reads the R source files directly — no build step or install needed.
-All exported functions (`figaro`, `figaro_stop`, etc.) become available
-immediately in your R session. Re-run `load_all` any time you pull new changes.
+The script checks whether `devtools` is installed (and installs it if not),
+locates the `figaro-r` package automatically, and installs it. When it
+finishes you will see:
 
-### Optional: permanent install
+```
+Done! Load the package in any R session with:
+  library(figaro)
+```
 
-If you want `library(figaro)` to work in every new R session without calling
-`load_all` each time:
+> **Setting the working directory in RStudio:**
+> Use *Session → Set Working Directory → Choose Directory* and select the
+> `figaro-` folder. Alternatively, open the `figaro-` folder as an RStudio
+> project (*File → Open Project in New Session* and pick any file inside it).
+
+> **Setting the working directory in base R:**
+> ```r
+> setwd("C:/GitHub/figaro-")   # Windows
+> setwd("~/projects/figaro-")  # macOS / Linux
+> source("install.R")
+> ```
+
+### After installation
 
 ```r
-devtools::install("C:/GitHub/figaro-/figaro-r")
-# Then in any session:
 library(figaro)
+figaro(iris = iris)
 ```
 
 ---
@@ -99,7 +109,7 @@ library(figaro)
 ## 3. Basic usage
 
 ```r
-devtools::load_all("C:/GitHub/figaro-/figaro-r")  # adjust path to your clone
+library(figaro)
 
 figaro(iris = iris)
 # → browser opens at http://localhost:<PORT>
