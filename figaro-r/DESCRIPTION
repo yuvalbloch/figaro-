@@ -1,0 +1,28 @@
+Package: figaro
+Title: Interactive Scientific Figure Composer
+Version: 0.1.0
+Authors@R: c(
+    person("Yuval", "Bloch", role = c("aut", "cre"), email = "yuval.bloch2@gmail.com"),
+    person("Kesem", "Abramov", role = "aut", email = "kesemk@post.bgu.ac.il"),
+    person("Nathan", "Edelman", role = "aut"))
+Description: Opens the Figaro interactive figure composer in a local browser,
+    pre-loaded with data frames, ggplot2 plot objects, or image files supplied
+    from the R session. Simple ggplot2 objects are extracted as fully editable
+    Figaro plots; complex plots and base-R graphics are rasterized and inserted
+    as image panels.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports:
+    jsonlite,
+    httpuv,
+    tools
+Suggests:
+    ggplot2,
+    rlang,
+    pdftools,
+    png,
+    httr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

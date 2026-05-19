@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(npm install *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(/usr/local/bin/npm run *)",
+      "Bash(/opt/homebrew/bin/npm run *)",
+      "Bash(npx vite *)",
+      "Bash(which node *)",
+      "Read(//usr/local/bin/**)",
+      "Bash(grep -l \"pending-panels\" /Users/kesemabramov/Library/R/x86_64/4.3/library/figaro/www/assets/*.js 2>/dev/null || echo \"NOT FOUND in installed package\")",
+      "Read(//Users/kesemabramov/Library/R/x86_64/4.3/library/figaro/www/assets/**)",
+      "Bash(sw_vers)",
+      "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh)",
+      "Bash(bash)"
     ]
   }
 }

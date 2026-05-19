@@ -39,7 +39,7 @@ export const PALETTES = ['viridis', 'set2', 'tableau10', 'grayscale', 'custom'];
 
 export const THEMES = ['lightMinimal', 'darkMinimal', 'publication'];
 
-export const FONTS = ['Inter', 'Roboto', 'Source Sans 3', 'Lato', 'Merriweather', 'IBM Plex Mono'];
+export const FONTS = ['Inter', 'Merriweather', 'IBM Plex Mono', 'Lato'];
 
 export const LABEL_STYLES = ['A', 'a', '1', '(A)', '(a)', '(1)'];
 export const LABEL_POSITIONS = [

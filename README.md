@@ -1,7 +1,10 @@
-# Figaro
+<p align="center">
+  <img src="public/figaro_logo_v2.png" alt="Figaro logo" height="250">
+</p>
 
 **Live app:** https://yuvalbloch.github.io/figaro-/
-**User manual:** [MANUAL.md](MANUAL.md)
+
+**User manual:** [MANUAL.md](MANUAL.md) · **R integration:** [R_INTEGRATION.md](R_INTEGRATION.md)
 
 A browser-based editor for composing multi-panel scientific figures. Build a grid layout, assign chart or image types to each panel, load your data, style the output, and export — all without leaving the browser.
 
@@ -77,3 +80,4 @@ Saving produces a `.figaro.json` file (schema v1.0.0). On load, if the session r
 ### Export pipeline
 
 All exports start from a single SVG composition (`engine/export/toSvg.js`) that renders each Plotly chart to an SVG image and assembles the full canvas. PNG and PDF are derived from that SVG; the HTML export bundles an inline copy of Plotly so the figure is self-contained.
+

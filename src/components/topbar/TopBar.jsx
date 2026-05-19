@@ -70,11 +70,11 @@ export function TopBar() {
   };
 
   return (
-    <header className="h-12 shrink-0 border-b border-border bg-background flex items-center px-4 gap-4">
+    <header className="h-[72px] shrink-0 border-b border-border bg-background flex items-center px-4 gap-4">
       <img
-        src={`${import.meta.env.BASE_URL}figaro_logo.svg`}
+        src={`${import.meta.env.BASE_URL}figaro_logo_v2.png`}
         alt="Figaro"
-        className="h-9 w-auto shrink-0"
+        className="h-[60px] w-auto shrink-0"
         draggable={false}
       />
 

@@ -1,6 +1,6 @@
 # Figaro — Progress Tracker
 
-Last updated: 2026-05-06 (Phase 8 complete)
+Last updated: 2026-05-14 (Phase 9 styling features)
 
 ## Run the app
 
@@ -107,12 +107,53 @@ Order: SVG → PNG → HTML → PDF.
 - [x] Re-layout button + cached positions
 - [x] Node label toggle, sizing, edge opacity
 
-## Phase 9 — Polish [ ]
+## Phase 9 — Polish [~]
 
 - [x] `public/examples/` with 3 example CSVs + "Load example" button (delivered in Phase 3)
+- [x] Per-element font size sliders — title, axis labels, tick labels, legend each have an independent size slider; null = auto (scales from base font size)
+- [x] Title position slider — horizontal drag-to-position slider (0 = left, 1 = right); also saved automatically when Plotly fires a relayout event
+- [x] Legend drag & save — drag the legend anywhere on the chart; position is persisted in the plot style and restored on re-render
+- [x] Click-to-highlight — clicking a plot element (title, axis label, ticks, legend) highlights the relevant Inspector controls with a ring and scrolls to them
+- [x] 4-style visual font picker — 2×2 button grid showing "Aa" in Inter (Sans), Merriweather (Serif), IBM Plex Mono (Mono), Lato (Round)
+- [x] Inner plot border toggle — "Plot border" checkbox draws a box frame around the plot area via Plotly `mirror` axes
+- [x] Logo updated — replaced figaro_logo.svg with figaro_logo2.png at 60 px height in a 72 px top bar
 - [ ] Walk through every acceptance criterion in spec §14
 - [ ] Performance pass on 10k-row dataset
 - [ ] Sweep code for `TODO(v2)` markers on out-of-scope items
+
+---
+
+## Phase R1 — Vite: R-package build mode [x]
+
+- [x] Add `VITE_BASE_PATH` env var to `vite.config.js` (relative base for R server)
+- [x] Install `cross-env` dev dependency (works on Mac/Linux/Windows)
+- [x] Add `build:r` npm script → outputs to `dist-r/` with `base: './'`
+
+## Phase R2 — Web app: initial session injection [x]
+
+- [x] Add `window.__FIGARO_INITIAL_SESSION__` hook to `src/App.jsx`
+- [x] `window.__FIGARO_R_SERVER__` injected by R server for `/restyle` endpoint
+- [x] `RPlotStyleInspector` wired into `ControlPanel` for image panels with `rPlot: true`
+- [x] `npm run build:r` → `dist-r/` copied to `figaro-r/inst/www/`
+
+## Phase R3 — R package [x]
+
+- [x] `figaro-r/` package scaffold: `DESCRIPTION`, `NAMESPACE`, `R/`, `inst/www/`, `tests/`
+- [x] `R/utils.R`: `new_id()`, `iso_now()`, `infer_col_type()`, `classify_input()`, `file_to_data_url()` (PNG/JPEG/WebP/PDF), `plot_to_data_url()` (ggplot2 + base R), `df_to_rows()`
+- [x] `R/session.R`: `build_session()` — data frames, ggplot2 (native extraction with image fallback), recordedPlot, file paths; `ggplot_to_figaro()` extractor; `figaro_save()`; `build_loaded()`
+- [x] `R/server.R`: `start_server()`, MIME helper, `/restyle` POST endpoint, `r_plots` in-memory store
+- [x] `R/figaro.R`: `figaro()`, `figaro_stop()`, `.figaro_env`
+- [x] `src/components/controls/RPlotStyleInspector.jsx`: title, axis labels, font size, legend position, width/height sliders; calls `/restyle` and updates panel image in-place
+
+## Phase R4 — Tests [ ]
+
+- [ ] Unit tests: session schema, column types, round-trip JSON
+- [ ] Unit tests: simple ggplot2 → native plot extraction (xCol/yCol/title/fontSize)
+- [ ] Unit tests: complex multi-layer ggplot → image fallback
+- [ ] Unit tests: mixed data frame + ggplot → empty + plot panels
+- [ ] Integration test: server starts, index.html contains injection
+- [ ] Manual tests (see plan for full checklist)
+- [ ] R CMD check passes (0 errors, 0 warnings)
 
 ---
 

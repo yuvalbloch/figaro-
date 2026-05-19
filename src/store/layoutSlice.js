@@ -117,6 +117,68 @@ export const layoutSlice = (set, get) => ({
     return { ok: true, newId };
   },
 
+  swapPanels: (idA, idB) =>
+    set((s) => {
+      if (idA === idB) return s;
+      const empty = { type: 'empty', label: { text: '', auto: true } };
+      const panelA = s.panels[idA] ?? empty;
+      const panelB = s.panels[idB] ?? empty;
+      return { panels: { ...s.panels, [idA]: panelB, [idB]: panelA } };
+    }),
+
+  reorganizeLayout: (rows, cols) =>
+    set((s) => {
+      const { layout, panels } = s;
+      const sorted = [...layout.regions].sort((a, b) =>
+        a.rowStart !== b.rowStart ? a.rowStart - b.rowStart : a.colStart - b.colStart
+      );
+      const empty = { type: 'empty', label: { text: '', auto: true } };
+      const newRegions = [];
+      const newPanels = {};
+      let idx = 0;
+      for (let r = 1; r <= rows; r++) {
+        for (let c = 1; c <= cols; c++) {
+          const regionId = id('r');
+          newRegions.push({ id: regionId, rowStart: r, rowEnd: r + 1, colStart: c, colEnd: c + 1 });
+          newPanels[regionId] = idx < sorted.length ? (panels[sorted[idx].id] ?? empty) : empty;
+          idx++;
+        }
+      }
+      return {
+        layout: {
+          ...layout,
+          rows,
+          cols,
+          rowSizes: Array(rows).fill(1),
+          colSizes: Array(cols).fill(1),
+          regions: newRegions,
+        },
+        panels: newPanels,
+        ui: { ...s.ui, selectedRegionId: null, mergeMode: false, mergeFirstId: null },
+      };
+    }),
+
+  appendPanel: ({ regionId, panelDef }) =>
+    set((s) => {
+      const newCols = s.layout.cols + 1;
+      const region = {
+        id: regionId,
+        rowStart: 1,
+        rowEnd: s.layout.rows + 1,
+        colStart: newCols,
+        colEnd: newCols + 1,
+      };
+      return {
+        layout: {
+          ...s.layout,
+          cols: newCols,
+          colSizes: [...s.layout.colSizes, 1],
+          regions: [...s.layout.regions, region],
+        },
+        panels: { ...s.panels, [regionId]: panelDef },
+      };
+    }),
+
   splitRegion: (regionId) => {
     const { layout, panels } = get();
     const r = layout.regions.find((x) => x.id === regionId);
