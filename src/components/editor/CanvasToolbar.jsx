@@ -1,6 +1,6 @@
 import { useStore } from '@/store';
 import { Button } from '@/components/ui/button';
-import { Combine, Maximize2, Minimize2 } from 'lucide-react';
+import { Combine, Maximize2, Minimize2, LayoutGrid } from 'lucide-react';
 
 export function CanvasToolbar() {
   const mergeMode = useStore((s) => s.ui.mergeMode);
@@ -9,6 +9,7 @@ export function CanvasToolbar() {
   const requestCanvasFit = useStore((s) => s.requestCanvasFit);
   const revertCanvasFit = useStore((s) => s.revertCanvasFit);
   const canvasFitted = useStore((s) => s.ui.canvasFitted);
+  const openDialog = useStore((s) => s.openDialog);
 
   return (
     <div className="h-10 shrink-0 flex items-center gap-2 px-3 border-b border-border bg-background">
@@ -19,6 +20,15 @@ export function CanvasToolbar() {
       >
         <Combine className="h-4 w-4" />
         {mergeMode ? 'Done merging' : 'Merge cells'}
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => openDialog('reorganize')}
+        title="Change the grid dimensions and reflow panels"
+      >
+        <LayoutGrid className="h-4 w-4" />
+        Reorganize
       </Button>
       <div className="flex-1" />
       {mergeMode && (

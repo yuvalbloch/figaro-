@@ -7,6 +7,7 @@ export function CanvasDndProvider({ children }) {
   const setPlot = useStore((s) => s.setPlot);
   const removePlot = useStore((s) => s.removePlot);
   const removeImageRef = useStore((s) => s.removeImageRef);
+  const swapPanels = useStore((s) => s.swapPanels);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } })
@@ -16,23 +17,31 @@ export function CanvasDndProvider({ children }) {
     if (!over) return;
     const drag = active.data.current;
     const drop = over.data.current;
-    if (drag?.kind !== 'dataset' || drop?.kind !== 'panel') return;
+    if (!drag || !drop) return;
 
-    const { regionId } = drop;
-    const { panels } = useStore.getState();
-    const existing = panels[regionId];
+    if (drag.kind === 'panel' && drop.kind === 'panel') {
+      if (drag.regionId !== drop.regionId) swapPanels(drag.regionId, drop.regionId);
+      return;
+    }
 
-    if (existing?.type === 'plot' && existing.plotId) removePlot(existing.plotId);
-    if (existing?.type === 'image' && existing.imageRef) removeImageRef(existing.imageRef);
+    if (drag.kind === 'dataset' && drop.kind === 'panel') {
+      const { regionId } = drop;
+      const { panels } = useStore.getState();
+      const existing = panels[regionId];
+      if (existing?.type !== 'empty') return;
 
-    const plotId = id('plt');
-    setPlot(plotId, {
-      type: 'bar',
-      datasetId: drag.datasetId,
-      params: {},
-      style: {},
-    });
-    setPanel(regionId, { type: 'plot', plotId });
+      if (existing?.type === 'plot' && existing.plotId) removePlot(existing.plotId);
+      if (existing?.type === 'image' && existing.imageRef) removeImageRef(existing.imageRef);
+
+      const plotId = id('plt');
+      setPlot(plotId, {
+        type: 'bar',
+        datasetId: drag.datasetId,
+        params: {},
+        style: {},
+      });
+      setPanel(regionId, { type: 'plot', plotId });
+    }
   };
 
   return (

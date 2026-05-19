@@ -6,6 +6,29 @@ import { computeSharedRange } from './axisLinking';
 import { plotRegistry } from './plotRegistry';
 import { useStore } from '@/store';
 
+// SVG class → inspector control key mapping
+const SVG_CLICK_MAP = [
+  { selector: '.gtitle',           controlKey: 'title'  },
+  { selector: '.xtitle',           controlKey: 'xLabel' },
+  { selector: '.ytitle',           controlKey: 'yLabel' },
+  { selector: '.legend',           controlKey: 'legend' },
+  { selector: '.xtick text',       controlKey: 'ticks'  },
+  { selector: '.ytick text',       controlKey: 'ticks'  },
+];
+
+function attachHighlightListeners(el) {
+  const { setHighlightedControl } = useStore.getState();
+  SVG_CLICK_MAP.forEach(({ selector, controlKey }) => {
+    el.querySelectorAll(selector).forEach((node) => {
+      node.style.cursor = 'pointer';
+      node.onclick = (e) => {
+        e.stopPropagation();
+        setHighlightedControl(controlKey);
+      };
+    });
+  });
+}
+
 export function PlotEngine({ regionId, plotId }) {
   const plot = useStore((s) => s.plots[plotId]);
   const dataset = useStore((s) => (plot?.datasetId ? s.datasets[plot.datasetId] : null));
@@ -25,6 +48,7 @@ export function PlotEngine({ regionId, plotId }) {
   const ref = useRef(null);
   const [warnings, setWarnings] = useState([]);
 
+  // Main render effect
   useEffect(() => {
     if (!ref.current || !plot) return;
     const chart = getChart(plot.type);
@@ -44,8 +68,13 @@ export function PlotEngine({ regionId, plotId }) {
 
     setWarnings(result.warnings || []);
     Plotly.react(ref.current, result.data, result.layout, baseConfig);
+
+    // Attach SVG click listeners after Plotly finishes painting
+    const el = ref.current;
+    requestAnimationFrame(() => { if (el) attachHighlightListeners(el); });
   }, [plot, dataset, rows, edgesRows, theme, customPalette, sharedX, sharedY, plotId]);
 
+  // Register in plotRegistry for export
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -53,6 +82,30 @@ export function PlotEngine({ regionId, plotId }) {
     return () => plotRegistry.delete(plotId);
   }, [plotId]);
 
+  // Save legend / title position when user drags them
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const handler = (eventData) => {
+      const stylePatch = {};
+      if ('legend.x' in eventData) stylePatch.legendX = eventData['legend.x'];
+      if ('legend.y' in eventData) stylePatch.legendY = eventData['legend.y'];
+      if ('title.x'  in eventData) stylePatch.titleX  = eventData['title.x'];
+      if (Object.keys(stylePatch).length === 0) return;
+      const current = useStore.getState().plots[plotId];
+      if (current) {
+        useStore.getState().patchPlot(plotId, {
+          style: { ...current.style, ...stylePatch },
+        });
+      }
+    };
+
+    el.on?.('plotly_relayout', handler);
+    return () => { try { el.removeAllListeners?.('plotly_relayout'); } catch {} };
+  }, [plotId]);
+
+  // ResizeObserver
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -66,8 +119,10 @@ export function PlotEngine({ regionId, plotId }) {
     };
   }, []);
 
+  const clearHighlight = () => useStore.getState().setHighlightedControl(null);
+
   return (
-    <div className="h-full w-full relative">
+    <div className="h-full w-full relative" onClick={clearHighlight}>
       <div ref={ref} className="h-full w-full" />
       {warnings.length > 0 && (
         <div className="absolute bottom-1 left-1 right-1 text-[10px] leading-tight text-amber-700 bg-amber-50/90 border border-amber-200 rounded px-1.5 py-1 pointer-events-none">

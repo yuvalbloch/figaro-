@@ -138,9 +138,30 @@ After changing any column mapping, the chart re-renders automatically if you are
 
 Click a panel, then scroll to the **Style** section in the Inspector.
 
+### Clicking a chart element to navigate controls
+
+Click directly on any text element inside a chart — the title, an axis label, a tick label, or the legend — to jump straight to its controls in the Inspector. The relevant fields highlight with a blue ring and the panel scrolls to them automatically. A small hint ("↑ highlighted from click") appears next to the Style heading while a highlight is active. Click anywhere on the empty chart area to clear the highlight.
+
+### Repositioning chart elements
+
+- **Legend** — drag the legend to any position on the chart. The position is saved and restored every time the chart re-renders.
+- **Title horizontal position** — use the **Title position** slider (0 = left edge, 1 = right edge) to place the title. The value is also updated automatically if you drag the title within Plotly.
+
+### Title and labels
+
+| Control | What it sets |
+|---|---|
+| **Title** | Chart title text |
+| **Title font size** | Size of the title text (8–36 pt) |
+| **Title position** | Horizontal position (0 left → 1 right) |
+| **X axis label** | Text below the X axis |
+| **Y axis label** | Text left of the Y axis |
+| **Axis label size** | Size of both axis label texts (7–28 pt) |
+| **Tick label size** | Size of the tick number/category labels (6–22 pt) |
+
 ### Color palette
 
-A palette selector appears at the top of Style. Choose from four built-in palettes:
+Choose from four built-in palettes:
 
 - **viridis** — sequential, blue-to-yellow
 - **set2** — qualitative, pastel
@@ -149,14 +170,36 @@ A palette selector appears at the top of Style. Choose from four built-in palett
 
 Select **Custom** to edit each of the 8 palette colors individually using color pickers.
 
-### Other style options
+### Font style
 
-The available controls depend on the chart type. Common options include:
+The **Font style** picker shows four options as visual "Aa" previews:
 
-- **Font** — pick a font family or leave on "Theme default"
-- **Font size** — numeric field
-- **Line width** — numeric field
-- **Show legend** / **Show grid** — toggles
+| Label | Font |
+|---|---|
+| **Sans** | Inter — clean, modern sans-serif |
+| **Serif** | Merriweather — traditional serif, suited for publications |
+| **Mono** | IBM Plex Mono — monospaced, suited for technical figures |
+| **Round** | Lato — rounded, friendly sans-serif |
+
+Click a selected font again to deselect it and fall back to the theme default.
+
+The **Base font size** slider (8–24 pt) sets the default size. Per-element sizes override this when set.
+
+### Legend
+
+- **Show legend** — toggle the legend on or off
+- **Legend font size** — size of legend text (6–22 pt); drag the legend on the chart to reposition it
+
+### Grid and frame
+
+- **Show gridlines** — toggle background grid lines
+- **Plot border** — draws a box frame around the plot area (mirrors the axis lines on all four sides)
+
+### Other chart-specific options
+
+Depending on the chart type, additional controls may appear:
+
+- **Line width** — for line charts
 - **Axis scale** — linear or log
 - **Bar mode** — grouped or stacked (bar charts)
 - **Color** — single color picker for monochrome charts

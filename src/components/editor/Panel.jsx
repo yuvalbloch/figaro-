@@ -1,4 +1,5 @@
-import { useDroppable } from '@dnd-kit/core';
+import { useDndContext, useDroppable, useDraggable } from '@dnd-kit/core';
+import { GripVertical } from 'lucide-react';
 import { useStore } from '@/store';
 import { cn } from '@/lib/cn';
 import { EmptyPanel } from './EmptyPanel';
@@ -20,11 +21,29 @@ export function Panel({ region, label }) {
   const mergeRegions = useStore((s) => s.mergeRegions);
   const splitRegion = useStore((s) => s.splitRegion);
 
-  const { setNodeRef, isOver } = useDroppable({
-    id: `panel-${region.id}`,
+  // Drop target — always enabled (not merge mode); logic in CanvasDndProvider decides whether to act
+  const { setNodeRef: setDropRef, isOver } = useDroppable({
+    id: `panel-drop-${region.id}`,
     data: { kind: 'panel', regionId: region.id },
-    disabled: panel?.type !== 'empty' || mergeMode,
+    disabled: mergeMode,
   });
+
+  // Drag source — the grip handle
+  const { setNodeRef: setDragRef, attributes, listeners, isDragging } = useDraggable({
+    id: `panel-drag-${region.id}`,
+    data: { kind: 'panel', regionId: region.id },
+    disabled: mergeMode,
+  });
+
+  // Know what's currently being dragged to decide drop highlight color
+  const { active } = useDndContext();
+  const activeDragKind = active?.data?.current?.kind;
+  const activeDragRegion = active?.data?.current?.regionId;
+
+  const showDropHighlight =
+    isOver &&
+    ((activeDragKind === 'dataset' && panel?.type === 'empty') ||
+      (activeDragKind === 'panel' && activeDragRegion !== region.id));
 
   const isMerged =
     region.rowEnd - region.rowStart > 1 || region.colEnd - region.colStart > 1;
@@ -66,19 +85,20 @@ export function Panel({ region, label }) {
 
   return (
     <div
-      ref={setNodeRef}
+      ref={setDropRef}
       style={{
         gridColumn: `${region.colStart} / ${region.colEnd}`,
         gridRow: `${region.rowStart} / ${region.rowEnd}`,
+        opacity: isDragging ? 0.4 : 1,
       }}
       onClick={onClick}
       onMouseEnter={() => setHoverRegion(region.id)}
       onMouseLeave={() => setHoverRegion(null)}
       className={cn(
-        'relative bg-white transition-colors cursor-pointer',
+        'relative bg-white transition-colors cursor-pointer group',
         isMergeFirst
           ? 'outline outline-2 outline-blue-500 -outline-offset-2'
-          : isOver
+          : showDropHighlight
             ? 'outline outline-2 outline-primary -outline-offset-2'
             : selected
               ? 'outline outline-2 outline-primary -outline-offset-2'
@@ -88,7 +108,7 @@ export function Panel({ region, label }) {
       )}
     >
       {(!panel || panel.type === 'empty') && (
-        <EmptyPanel regionId={region.id} isOver={isOver} />
+        <EmptyPanel regionId={region.id} isOver={showDropHighlight} />
       )}
       {panel?.type === 'plot' && panel.plotId && (
         <PlotEngine regionId={region.id} plotId={panel.plotId} />
@@ -102,6 +122,20 @@ export function Panel({ region, label }) {
           fontSize={labeling.fontSize}
           bold={labeling.bold}
         />
+      )}
+
+      {/* Drag handle — visible on hover, hidden in merge mode */}
+      {!mergeMode && (
+        <div
+          ref={setDragRef}
+          {...attributes}
+          {...listeners}
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-1 left-1 z-10 p-0.5 rounded opacity-0 group-hover:opacity-60 hover:!opacity-100 cursor-grab active:cursor-grabbing transition-opacity"
+          title="Drag to swap panel"
+        >
+          <GripVertical className="h-3.5 w-3.5 text-neutral-400" />
+        </div>
       )}
     </div>
   );

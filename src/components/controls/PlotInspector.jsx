@@ -8,30 +8,49 @@ import { Trash2, Check, Undo2, Shuffle } from 'lucide-react';
 
 const CHART_TYPES = listCharts();
 
+// Maps a clicked SVG element (controlKey) to the style field keys to highlight
+const HIGHLIGHT_KEYS = {
+  title:  ['title', 'titleFontSize', 'titleX'],
+  xLabel: ['xLabel', 'axisFontSize'],
+  yLabel: ['yLabel', 'axisFontSize'],
+  legend: ['showLegend', 'legendFontSize'],
+  ticks:  ['tickFontSize'],
+};
+
 function applyDefaults(plot, chart) {
   return {
     ...plot,
     params: { ...(chart.defaults?.params || {}), ...(plot.params || {}) },
-    style: { ...(chart.defaults?.style || {}), ...(plot.style || {}) },
+    style:  { ...(chart.defaults?.style  || {}), ...(plot.style  || {}) },
   };
 }
 
 export function PlotInspector({ regionId, panel }) {
-  const plot = useStore((s) => s.plots[panel.plotId]);
-  const dataset = useStore((s) => (plot?.datasetId ? s.datasets[plot.datasetId] : null));
-  const draft = useStore((s) => s.ui.draft);
+  const plot     = useStore((s) => s.plots[panel.plotId]);
+  const dataset  = useStore((s) => (plot?.datasetId ? s.datasets[plot.datasetId] : null));
+  const draft    = useStore((s) => s.ui.draft);
   const setDraft = useStore((s) => s.setDraft);
-  const setPlot = useStore((s) => s.setPlot);
+  const setPlot  = useStore((s) => s.setPlot);
   const patchPlot = useStore((s) => s.patchPlot);
   const removePlot = useStore((s) => s.removePlot);
   const setPanel = useStore((s) => s.setPanel);
+  const highlightedControl = useStore((s) => s.ui.highlightedControl);
 
-  const isDraft = draft && draft.plotId === panel.plotId;
+  const isDraft   = draft && draft.plotId === panel.plotId;
   const effective = useMemo(() => {
     if (!plot) return null;
     if (isDraft) return { ...plot, params: draft.params, style: draft.style };
     return plot;
   }, [plot, isDraft, draft]);
+
+  const highlightedKeys = highlightedControl ? (HIGHLIGHT_KEYS[highlightedControl] || []) : [];
+
+  // Scroll to first highlighted field when the highlighted control changes
+  useEffect(() => {
+    if (highlightedKeys.length === 0) return;
+    const el = document.getElementById(`style-field-${highlightedKeys[0]}`);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [highlightedControl]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Drop draft when switching panels
   useEffect(() => {
@@ -132,14 +151,23 @@ export function PlotInspector({ regionId, panel }) {
       </div>
 
       <div className="space-y-2 pt-3 border-t border-border">
-        <Label className="text-xs uppercase tracking-wider text-muted-foreground">Style</Label>
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+          Style
+          {highlightedControl && (
+            <span className="ml-2 text-[10px] text-primary font-normal normal-case">
+              ↑ highlighted from click
+            </span>
+          )}
+        </Label>
         {chart.schema.style.map((f) => (
-          <Field
-            key={f.key}
-            field={f}
-            value={effective.style?.[f.key] ?? null}
-            onChange={(v) => updateStyle(f.key, v)}
-          />
+          <div key={f.key} id={`style-field-${f.key}`}>
+            <Field
+              field={f}
+              value={effective.style?.[f.key] ?? null}
+              onChange={(v) => updateStyle(f.key, v)}
+              highlighted={highlightedKeys.includes(f.key)}
+            />
+          </div>
         ))}
         {chart.type === 'network' && (
           <Button
