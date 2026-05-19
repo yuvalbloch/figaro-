@@ -1,6 +1,6 @@
 import { useStore } from '@/store';
 import { Button } from '@/components/ui/button';
-import { Combine, Maximize2, Minimize2, LayoutGrid } from 'lucide-react';
+import { Combine, Maximize2, Minimize2, LayoutGrid, PanelBottomOpen, PanelRightOpen } from 'lucide-react';
 
 export function CanvasToolbar() {
   const mergeMode = useStore((s) => s.ui.mergeMode);
@@ -10,6 +10,8 @@ export function CanvasToolbar() {
   const revertCanvasFit = useStore((s) => s.revertCanvasFit);
   const canvasFitted = useStore((s) => s.ui.canvasFitted);
   const openDialog = useStore((s) => s.openDialog);
+  const addRow = useStore((s) => s.addRow);
+  const addCol = useStore((s) => s.addCol);
 
   return (
     <div className="h-10 shrink-0 flex items-center gap-2 px-3 border-b border-border bg-background">
@@ -29,6 +31,24 @@ export function CanvasToolbar() {
       >
         <LayoutGrid className="h-4 w-4" />
         Reorganize
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={addRow}
+        title="Append a new empty row"
+      >
+        <PanelBottomOpen className="h-4 w-4" />
+        Add row
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={addCol}
+        title="Append a new empty column"
+      >
+        <PanelRightOpen className="h-4 w-4" />
+        Add column
       </Button>
       <div className="flex-1" />
       {mergeMode && (

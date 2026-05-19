@@ -12,7 +12,12 @@
       "Read(//Users/kesemabramov/Library/R/x86_64/4.3/library/figaro/www/assets/**)",
       "Bash(sw_vers)",
       "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh)",
-      "Bash(bash)"
+      "Bash(bash)",
+      "Bash(grep -iE \"\\(^|/\\)\\(r|R\\)\\($|/\\)\")",
+      "Bash(R --version)",
+      "Bash(Rscript -e \"parse\\(file='/Users/yuval/Desktop/figrao/figaro-/install.R'\\); cat\\('install.R: OK\\\\n'\\)\")",
+      "Bash(Rscript -e \"parse\\(file='/Users/yuval/Desktop/figrao/figaro-/figaro-r/R/repair.R'\\); cat\\('repair.R: OK\\\\n'\\)\")",
+      "Bash(Rscript *)"
     ]
   }
 }

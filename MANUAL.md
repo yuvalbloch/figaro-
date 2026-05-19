@@ -87,6 +87,15 @@ The canvas is a grid of panels. Each panel starts **empty** and shows a drop zon
 
 Drag a dataset card from the left sidebar onto an empty panel. The panel highlights when a valid drop is detected. Releasing creates a default chart in that panel.
 
+### Add rows and columns
+
+The toolbar above the canvas has two buttons for growing the grid:
+
+- **Add row** — appends a new empty row at the bottom of the grid.
+- **Add column** — appends a new empty column at the right of the grid.
+
+Each new row/column starts equal-sized to the existing ones and contains empty panels ready to receive charts or images. To remove rows or columns, use **Reorganize** (see below).
+
 ### Resize rows and columns
 
 Thin dividers sit between rows and between columns. Hover a divider — the cursor changes to a resize arrow — then drag to redistribute space between the adjacent rows or columns.

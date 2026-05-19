@@ -23,6 +23,8 @@ export default function App() {
   const addDataset = useStore((s) => s.addDataset);
   const addImageRef = useStore((s) => s.addImageRef);
   const setPlot = useStore((s) => s.setPlot);
+  const addRow = useStore((s) => s.addRow);
+  const addCol = useStore((s) => s.addCol);
   const pollingRef = useRef(null);
 
   useEffect(() => {
@@ -65,6 +67,11 @@ export default function App() {
         const deltas = await res.json();
         if (!Array.isArray(deltas) || deltas.length === 0) return;
         for (const delta of deltas) {
+          if (delta.layoutCommand) {
+            if (delta.layoutCommand.type === 'addRow') addRow();
+            if (delta.layoutCommand.type === 'addCol') addCol();
+            continue;
+          }
           for (const [dsId, ds] of Object.entries(delta.datasets || {})) {
             const loaded = delta.loaded?.[dsId];
             addDataset(dsId, ds, loaded?.rows ?? []);

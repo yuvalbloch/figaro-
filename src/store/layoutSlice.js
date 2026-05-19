@@ -158,6 +158,50 @@ export const layoutSlice = (set, get) => ({
       };
     }),
 
+  addRow: () =>
+    set((s) => {
+      const { layout, panels } = s;
+      const newRow = layout.rows + 1;
+      const newRegions = [];
+      const newPanels = { ...panels };
+      for (let c = 1; c <= layout.cols; c++) {
+        const regionId = id('r');
+        newRegions.push({ id: regionId, rowStart: newRow, rowEnd: newRow + 1, colStart: c, colEnd: c + 1 });
+        newPanels[regionId] = { type: 'empty', label: { text: '', auto: true } };
+      }
+      return {
+        layout: {
+          ...layout,
+          rows: newRow,
+          rowSizes: [...layout.rowSizes, 1],
+          regions: [...layout.regions, ...newRegions],
+        },
+        panels: newPanels,
+      };
+    }),
+
+  addCol: () =>
+    set((s) => {
+      const { layout, panels } = s;
+      const newCol = layout.cols + 1;
+      const newRegions = [];
+      const newPanels = { ...panels };
+      for (let r = 1; r <= layout.rows; r++) {
+        const regionId = id('r');
+        newRegions.push({ id: regionId, rowStart: r, rowEnd: r + 1, colStart: newCol, colEnd: newCol + 1 });
+        newPanels[regionId] = { type: 'empty', label: { text: '', auto: true } };
+      }
+      return {
+        layout: {
+          ...layout,
+          cols: newCol,
+          colSizes: [...layout.colSizes, 1],
+          regions: [...layout.regions, ...newRegions],
+        },
+        panels: newPanels,
+      };
+    }),
+
   appendPanel: ({ regionId, panelDef }) =>
     set((s) => {
       const newCols = s.layout.cols + 1;
