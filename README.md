@@ -81,3 +81,5 @@ Saving produces a `.figaro.json` file (schema v1.0.0). On load, if the session r
 ### Export pipeline
 
 All exports start from a single SVG composition (`engine/export/toSvg.js`) that renders each Plotly chart to an SVG image and assembles the full canvas. PNG and PDF are derived from that SVG; the HTML export bundles an inline copy of Plotly so the figure is self-contained.
+
+test for github
