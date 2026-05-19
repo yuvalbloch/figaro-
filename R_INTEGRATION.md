@@ -67,10 +67,21 @@ git clone https://github.com/yuvalbloch/figaro-.git
 
 This creates a `figaro-` folder wherever you run the command.
 
-### Step 2 — Run the installer
+### Step 2 — Set your working directory to the `figaro-` folder
 
-Open R or RStudio, set your working directory to the cloned `figaro-` folder,
-then run:
+**RStudio:** Use *Session → Set Working Directory → Choose Directory* and select
+the `figaro-` folder. Alternatively, open it as an RStudio project via
+*File → Open Project in New Session*.
+
+**Base R / R console:**
+```r
+setwd("C:/GitHub/figaro-")   # Windows — adjust path to where you cloned it
+setwd("~/projects/figaro-")  # macOS / Linux
+```
+
+### Step 3 — Run the installer
+
+With `figaro-` as your working directory, run:
 
 ```r
 source("install.R")
@@ -84,18 +95,6 @@ finishes you will see:
 Done! Load the package in any R session with:
   library(figaro)
 ```
-
-> **Setting the working directory in RStudio:**
-> Use *Session → Set Working Directory → Choose Directory* and select the
-> `figaro-` folder. Alternatively, open the `figaro-` folder as an RStudio
-> project (*File → Open Project in New Session* and pick any file inside it).
-
-> **Setting the working directory in base R:**
-> ```r
-> setwd("C:/GitHub/figaro-")   # Windows
-> setwd("~/projects/figaro-")  # macOS / Linux
-> source("install.R")
-> ```
 
 ### After installation
 
