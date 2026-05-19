@@ -10,7 +10,7 @@ A browser-based editor for composing multi-panel scientific figures. Build a gri
 
 ---
 
-## Getting started
+## Getting started 
 
 ### Use the hosted app
 
