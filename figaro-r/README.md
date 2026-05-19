@@ -34,6 +34,16 @@ p <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
   geom_point() + labs(title = "Iris")
 figaro(scatter = p)
 
+# 2×2 grid layout
+figaro(p1 = p1, p2 = p2, p3 = p3, p4 = p4, layout = "2x2")
+
+# Matrix layout — panel 1 spans the full top row, panels 2 & 3 on the bottom
+m <- matrix(c(1,1,2,3), nrow = 2, byrow = TRUE)
+figaro(wide = p1, left = p2, right = p3, layout = m)
+
+# Relative column widths (left column twice as wide)
+figaro(main = p1, inset = p2, layout = "1x2", col_sizes = c(2, 1))
+
 # Add a panel to the running session (browser updates in ~1 second)
 p2 <- ggplot(iris, aes(Species)) + geom_bar()
 fig <- figaro(scatter = p)

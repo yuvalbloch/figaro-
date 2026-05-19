@@ -23,15 +23,22 @@
 #' figaro(data = iris, scatter = my_ggplot, extra = "figure.pdf")
 #' ```
 #'
-#' @param ...     Named inputs: data frames, ggplot2/recordedPlot objects, or
-#'                file paths. Names become panel labels.
-#' @param session Path to an existing `.figaro.json` file. When supplied,
-#'                the saved session is re-opened and `...` is ignored.
-#' @param canvas  Canvas size preset. One of: `"A4_portrait"`, `"A4_landscape"`,
-#'                `"letter_portrait"`, `"letter_landscape"`, `"poster_A0"`,
-#'                `"slide_16_9"`, `"slide_4_3"`.
-#' @param port    Local TCP port. Auto-assigned if `NULL`.
-#' @param launch  Open the browser automatically? Default `TRUE`.
+#' @param ...       Named inputs: data frames, ggplot2/recordedPlot objects, or
+#'                  file paths. Names become panel labels.
+#' @param session   Path to an existing `.figaro.json` file. When supplied,
+#'                  the saved session is re-opened and `...` is ignored.
+#' @param canvas    Canvas size preset. One of: `"A4_portrait"`, `"A4_landscape"`,
+#'                  `"letter_portrait"`, `"letter_landscape"`, `"poster_A0"`,
+#'                  `"slide_16_9"`, `"slide_4_3"`.
+#' @param layout    Panel layout: `NULL` (default — one row, panels side by side),
+#'                  a `"RxC"` string such as `"2x2"`, or an integer matrix
+#'                  (like R's \code{\link[graphics]{layout}()}) for spanning panels.
+#' @param row_sizes Optional numeric vector of relative row heights (length must
+#'                  equal number of rows). Defaults to equal heights.
+#' @param col_sizes Optional numeric vector of relative column widths (length must
+#'                  equal number of columns). Defaults to equal widths.
+#' @param port      Local TCP port. Auto-assigned if `NULL`.
+#' @param launch    Open the browser automatically? Default `TRUE`.
 #'
 #' @return Invisibly, a list with `$server` (httpuv handle) and `$port`.
 #'   Call [figaro_stop()] to shut down the server.
@@ -47,15 +54,22 @@
 #'   geom_point() + labs(title = "Iris")
 #' figaro(scatter = p)
 #'
-#' # Mixed call
-#' figaro(data = iris, fig = p, extra = "path/to/figure.pdf")
+#' # 2x2 grid layout
+#' figaro(p1 = p1, p2 = p2, p3 = p3, p4 = p4, layout = "2x2")
+#'
+#' # Matrix layout — panel 1 spans full top row, panels 2 & 3 on bottom row
+#' m <- matrix(c(1,1,2,3), nrow = 2, byrow = TRUE)
+#' figaro(wide = p1, left = p2, right = p3, layout = m)
 #' }
 #' @export
 figaro <- function(...,
-                   session = NULL,
-                   canvas  = "A4_portrait",
-                   port    = NULL,
-                   launch  = TRUE) {
+                   session   = NULL,
+                   canvas    = "A4_portrait",
+                   layout    = NULL,
+                   row_sizes = NULL,
+                   col_sizes = NULL,
+                   port      = NULL,
+                   launch    = TRUE) {
   inputs <- list(...)
 
   if (!is.null(session)) {
@@ -66,7 +80,10 @@ figaro <- function(...,
   } else {
     sess_obj <- build_session(inputs,
                               name          = "Untitled Figure",
-                              canvas_preset = canvas)
+                              canvas_preset = canvas,
+                              layout        = layout,
+                              row_sizes     = row_sizes,
+                              col_sizes     = col_sizes)
     r_plots  <- sess_obj$.rPlots %||% list()
   }
 

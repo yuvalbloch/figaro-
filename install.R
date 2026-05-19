@@ -18,6 +18,29 @@ if (!dir.exists(pkg)) {
   )
 }
 
+# Unload and remove any existing installation to avoid corrupt .rdb errors.
+if ("figaro" %in% loadedNamespaces()) {
+  try(unloadNamespace("figaro"), silent = TRUE)
+}
+if (requireNamespace("figaro", quietly = TRUE)) {
+  message("Removing existing figaro installation...")
+  remove.packages("figaro")
+}
+
+# Copy the latest web bundle into inst/www/ so the installed package serves
+# up-to-date assets. dist-r/ is produced by `npm run build:r`.
+dist_r <- file.path(getwd(), "dist-r")
+inst_www <- file.path(pkg, "inst", "www")
+if (dir.exists(dist_r)) {
+  message("Copying dist-r/ → figaro-r/inst/www/ ...")
+  if (dir.exists(inst_www)) unlink(inst_www, recursive = TRUE)
+  dir.create(inst_www, recursive = TRUE, showWarnings = FALSE)
+  file.copy(list.files(dist_r, full.names = TRUE), inst_www, recursive = TRUE)
+} else {
+  message("Note: dist-r/ not found — install will use existing inst/www/ assets.\n",
+          "Run `npm run build:r` in the figaro- directory to build fresh assets.")
+}
+
 message("Installing figaro from ", pkg, " ...")
-devtools::install(pkg)
+devtools::install(pkg, reload = FALSE)
 message("\nDone! Load the package in any R session with:\n  library(figaro)")

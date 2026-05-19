@@ -123,12 +123,76 @@ ggplot_to_figaro <- function(p, ds_id, plot_id) {
   list(ok = TRUE, plot = figaro_plot, df = df)
 }
 
+#' Parse a layout specification into grid geometry.
+#'
+#' @param layout NULL, a "RxC" string, or an integer matrix (like R's layout()).
+#' @param n_panels Number of panels.
+#' @param row_sizes Optional numeric vector of relative row heights.
+#' @param col_sizes Optional numeric vector of relative column widths.
+#' @return List with rows, cols, rowSizes, colSizes, assignments (one entry per panel).
+.parse_layout <- function(layout, n_panels, row_sizes = NULL, col_sizes = NULL) {
+  if (is.null(layout)) {
+    rows <- 1L
+    cols <- as.integer(n_panels)
+    assignments <- lapply(seq_len(n_panels), function(i)
+      list(rowStart = 1L, rowEnd = 2L, colStart = i, colEnd = i + 1L))
+
+  } else if (is.character(layout)) {
+    parts <- strsplit(trimws(layout), "[xX×]")[[1]]
+    if (length(parts) != 2 || any(is.na(suppressWarnings(as.integer(parts)))))
+      stop("layout string must be \"RxC\" (e.g. \"2x2\"); got: \"", layout, "\"")
+    rows <- as.integer(parts[1])
+    cols <- as.integer(parts[2])
+    if (n_panels > rows * cols)
+      stop("layout \"", layout, "\" has only ", rows * cols,
+           " cells but ", n_panels, " panels were supplied")
+    assignments <- lapply(seq_len(n_panels), function(i) {
+      row <- as.integer((i - 1L) %/% cols) + 1L
+      col <- as.integer((i - 1L) %%  cols) + 1L
+      list(rowStart = row, rowEnd = row + 1L, colStart = col, colEnd = col + 1L)
+    })
+
+  } else if (is.matrix(layout)) {
+    rows <- nrow(layout)
+    cols <- ncol(layout)
+    assignments <- lapply(seq_len(n_panels), function(k) {
+      cells <- which(layout == k, arr.ind = TRUE)
+      if (nrow(cells) == 0)
+        stop("Panel ", k, " not found in layout matrix")
+      r1 <- min(cells[, 1]); r2 <- max(cells[, 1])
+      c1 <- min(cells[, 2]); c2 <- max(cells[, 2])
+      expected <- (r2 - r1 + 1L) * (c2 - c1 + 1L)
+      if (nrow(cells) != expected)
+        stop("Cells for panel ", k, " in layout matrix must form a contiguous rectangle")
+      list(rowStart = as.integer(r1), rowEnd = as.integer(r2) + 1L,
+           colStart = as.integer(c1), colEnd = as.integer(c2) + 1L)
+    })
+
+  } else {
+    stop("layout must be NULL, a \"RxC\" string, or an integer matrix")
+  }
+
+  list(
+    rows       = as.integer(rows),
+    cols       = as.integer(cols),
+    rowSizes   = if (!is.null(row_sizes)) as.list(row_sizes) else as.list(rep(1L, rows)),
+    colSizes   = if (!is.null(col_sizes)) as.list(col_sizes) else as.list(rep(1L, cols)),
+    assignments = assignments
+  )
+}
+
 #' Build a Figaro session object from named R inputs.
 #'
 #' @param inputs       Named list of data frames, ggplot2 objects, recordedPlots,
 #'                     or file paths (PNG/JPEG/WebP/PDF).
 #' @param name         Figure title shown in the UI (default "Untitled Figure").
 #' @param canvas_preset One of the keys in CANVAS_PRESETS (default "A4_portrait").
+#' @param layout       Panel layout: NULL (default 1×N row), a "RxC" string such
+#'                     as "2x2", or an integer matrix (like R's \code{layout()}).
+#' @param row_sizes    Optional numeric vector of relative row heights (same
+#'                     length as number of rows). Defaults to equal sizes.
+#' @param col_sizes    Optional numeric vector of relative column widths (same
+#'                     length as number of columns). Defaults to equal sizes.
 #'
 #' @return A list matching the Figaro 1.1.0 session schema, plus a `$fileData`
 #'   element (used internally by build_loaded; stripped before serialization).
@@ -136,10 +200,14 @@ ggplot_to_figaro <- function(p, ds_id, plot_id) {
 #' @export
 build_session <- function(inputs = list(),
                           name          = "Untitled Figure",
-                          canvas_preset = "A4_portrait") {
+                          canvas_preset = "A4_portrait",
+                          layout        = NULL,
+                          row_sizes     = NULL,
+                          col_sizes     = NULL) {
   canvas_dims <- .CANVAS_PRESETS[[canvas_preset]] %||% .CANVAS_PRESETS[["A4_portrait"]]
 
   n <- max(length(inputs), 1L)
+  grid <- .parse_layout(layout, n, row_sizes, col_sizes)
 
   datasets   <- list()
   image_refs <- list()
@@ -161,12 +229,13 @@ build_session <- function(inputs = list(),
                      })
 
     region_id <- new_id("r")
+    cell      <- grid$assignments[[i]]
     regions[[i]] <- list(
       id       = region_id,
-      rowStart = 1L,
-      rowEnd   = 2L,
-      colStart = i,
-      colEnd   = i + 1L
+      rowStart = cell$rowStart,
+      rowEnd   = cell$rowEnd,
+      colStart = cell$colStart,
+      colEnd   = cell$colEnd
     )
 
     if (type == "dataset") {
@@ -260,10 +329,10 @@ build_session <- function(inputs = list(),
               canvas_dims)
 
   layout <- list(
-    rows     = 1L,
-    cols     = n,
-    rowSizes = list(1L),
-    colSizes = as.list(rep(1L, n)),
+    rows     = grid$rows,
+    cols     = grid$cols,
+    rowSizes = grid$rowSizes,
+    colSizes = grid$colSizes,
     gap      = 12L,
     padding  = 24L,
     regions  = regions

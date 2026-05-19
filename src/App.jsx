@@ -7,6 +7,7 @@ import { NewSessionDialog } from '@/components/dialogs/NewSessionDialog';
 import { LocateFilesDialog } from '@/components/dialogs/LocateFilesDialog';
 import { ExportDialog } from '@/components/dialogs/ExportDialog';
 import { ManualDialog } from '@/components/dialogs/ManualDialog';
+import { ReorganizeDialog } from '@/components/dialogs/ReorganizeDialog';
 import { CanvasDndProvider } from '@/components/editor/CanvasDndProvider';
 import { useStore } from '@/store';
 import { restoreSession } from '@/persistence/idb';
@@ -77,8 +78,8 @@ export default function App() {
           }
           appendPanel({ regionId: delta.regionId, panelDef: delta.panel });
         }
-      } catch {
-        // server not yet ready or unavailable — ignore
+      } catch (e) {
+        console.warn('[figaro] pending-panels poll error:', e);
       }
     };
 
@@ -106,6 +107,7 @@ export default function App() {
         <LocateFilesDialog />
         <ExportDialog />
         <ManualDialog />
+        <ReorganizeDialog />
       </div>
     </CanvasDndProvider>
   );

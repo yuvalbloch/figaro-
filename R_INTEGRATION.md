@@ -16,18 +16,20 @@ pre-loaded — no manual file picking required.
 1. [Prerequisites](#1-prerequisites)
 2. [Installation](#2-installation)
 3. [Basic usage](#3-basic-usage)
-4. [Input types](#4-input-types)
+4. [Panel layout](#4-panel-layout)
+5. [Input types](#5-input-types)
    - [Data frames](#data-frames)
    - [ggplot2 objects](#ggplot2-objects)
    - [Base-R recorded plots](#base-r-recorded-plots)
    - [Image and PDF files](#image-and-pdf-files)
    - [Mixed calls](#mixed-calls)
-5. [Opening a saved session](#5-opening-a-saved-session)
-6. [R Plot Style editor](#6-r-plot-style-editor)
-7. [Saving and exporting from the browser](#7-saving-and-exporting-from-the-browser)
-8. [Stopping the server](#8-stopping-the-server)
-9. [Rebuilding the web bundle](#9-rebuilding-the-web-bundle)
-10. [Reference](#10-reference)
+6. [Adding panels to a running session](#6-adding-panels-to-a-running-session)
+7. [Opening a saved session](#7-opening-a-saved-session)
+8. [R Plot Style editor](#8-r-plot-style-editor)
+9. [Saving and exporting from the browser](#9-saving-and-exporting-from-the-browser)
+10. [Stopping the server](#10-stopping-the-server)
+11. [Rebuilding the web bundle](#11-rebuilding-the-web-bundle)
+12. [Reference](#12-reference)
 
 ---
 
@@ -130,7 +132,99 @@ Available presets: `A4_portrait` (default), `A4_landscape`, `letter_portrait`,
 
 ---
 
-## 4. Input types
+## 4. Panel layout
+
+By default `figaro()` places all panels side by side in a single row. Use the
+`layout` argument to arrange panels in a grid, and `row_sizes` / `col_sizes`
+to control relative proportions.
+
+### Simple grid — `"RxC"` string
+
+Panels fill the grid left-to-right, top-to-bottom:
+
+```r
+# 2 rows × 2 columns
+figaro(p1 = p1, p2 = p2, p3 = p3, p4 = p4, layout = "2x2")
+
+# 2 rows × 1 column (stacked)
+figaro(top = p1, bottom = p2, layout = "2x1")
+
+# 1 row × 3 columns — same as the default
+figaro(a = p1, b = p2, c = p3, layout = "1x3")
+```
+
+### Matrix layout — spanning panels
+
+For panels that span multiple cells, pass an integer matrix (exactly like R's
+built-in `layout()` function). Each unique integer maps to the correspondingly
+positioned named argument:
+
+```r
+# Panel 1 spans the full top row; panels 2 and 3 share the bottom row
+m <- matrix(c(1, 1,
+              2, 3), nrow = 2, byrow = TRUE)
+figaro(wide = p1, left = p2, right = p3, layout = m)
+
+# Tall panel on the left, two stacked panels on the right
+m2 <- matrix(c(1, 2,
+               1, 3), nrow = 2, byrow = TRUE)
+figaro(tall = p1, top_right = p2, bot_right = p3, layout = m2)
+```
+
+Each integer in the matrix must occupy a **contiguous rectangle** of cells.
+
+### Relative row and column sizes
+
+Use `row_sizes` and `col_sizes` to set proportional heights and widths
+(equivalent to CSS `fr` units):
+
+```r
+# Left column twice as wide as the right
+figaro(main = p1, inset = p2,
+       layout    = "1x2",
+       col_sizes = c(2, 1))
+
+# Top row twice as tall as the bottom
+figaro(p1 = p1, p2 = p2, p3 = p3, p4 = p4,
+       layout    = "2x2",
+       row_sizes = c(2, 1))
+```
+
+### Adjusting the layout visually in the browser
+
+If you used the default layout (or want to fine-tune after opening the browser),
+the Figaro web UI provides three tools in the toolbar above the canvas:
+
+**Reorganize** — changes the grid dimensions and reflows all panels.
+Click the *Reorganize* button, enter the desired number of rows and columns,
+and click *Apply*. Panels are redistributed left-to-right, top-to-bottom into
+the new grid. Empty cells are added if the new grid is larger; a warning is
+shown if it is smaller than the number of panels with content.
+
+Example workflow: `figaro(p1=p1, p2=p2, p3=p3)` opens a 1×3 layout.
+Click *Reorganize* → enter 2 rows, 2 columns → *Apply* → panels are now in a
+2×2 grid with one empty cell that you can fill later.
+
+**Drag to swap** — moves a panel to a different position.
+Hover over any panel to reveal a small grip icon (⠿) in its top-left corner.
+Drag it and drop it onto any other panel to swap their positions. The content
+of both panels is exchanged; everything else (grid dimensions, other panels)
+stays the same.
+
+**Merge / Split cells** — combines two adjacent panels into one spanning cell,
+or splits a merged cell back. Click *Merge cells* in the toolbar, then click
+two cells that together form a rectangle to merge them. Click a merged cell
+while in merge mode to split it back into individual cells. Click
+*Done merging* to exit merge mode.
+
+**Resize rows and columns** — drag the divider lines between panels to
+adjust their relative proportions.
+
+All four tools work together and can be combined freely.
+
+---
+
+## 5. Input types
 
 ### Data frames
 
@@ -164,7 +258,7 @@ Supported geoms for native extraction: `geom_point` (scatter), `geom_bar` /
 
 **Complex plots** (multiple layers, facets, or unsupported geoms) are
 rasterized to PNG and inserted as image panels. Clicking the panel reveals the
-[R Plot Style editor](#6-r-plot-style-editor) which re-renders the original R
+[R Plot Style editor](#8-r-plot-style-editor) which re-renders the original R
 object with new style settings.
 
 ```r
@@ -215,7 +309,7 @@ Panels appear left-to-right in the order the arguments are given.
 
 ---
 
-## 5. Adding panels to a running session
+## 6. Adding panels to a running session
 
 You can push new panels into the browser **after** `figaro()` has already
 launched, without restarting:
@@ -240,6 +334,7 @@ one second.
 ---
 
 ## 7. Opening a saved session
+
 
 To re-open a `.figaro.json` file saved from the browser:
 
@@ -337,9 +432,9 @@ devtools::load_all("path/to/figaro-/figaro-r")
 
 ---
 
-## 10. Reference
+## 12. Reference
 
-### `figaro(..., session, canvas, port, launch)`
+### `figaro(..., session, canvas, layout, row_sizes, col_sizes, port, launch)`
 
 Opens the Figaro figure composer in the browser.
 
@@ -348,6 +443,9 @@ Opens the Figaro figure composer in the browser.
 | `...` | named | — | Data frames, ggplot2/recordedPlot objects, or file paths. Names become panel labels. |
 | `session` | character | `NULL` | Path to a `.figaro.json` file to re-open. Overrides `...`. |
 | `canvas` | character | `"A4_portrait"` | Canvas size preset. |
+| `layout` | NULL / string / matrix | `NULL` | Panel grid layout. See [Section 4](#4-panel-layout). |
+| `row_sizes` | numeric vector | `NULL` | Relative row heights. |
+| `col_sizes` | numeric vector | `NULL` | Relative column widths. |
 | `port` | integer | auto | TCP port for the local server. |
 | `launch` | logical | `TRUE` | Open the browser automatically. |
 
@@ -370,7 +468,7 @@ panels queued.
 
 Stops the local server started by the most recent `figaro()` call.
 
-### `build_session(inputs, name, canvas_preset)`
+### `build_session(inputs, name, canvas_preset, layout, row_sizes, col_sizes)`
 
 Lower-level function: converts a named list of R inputs to a Figaro session
 object. Useful for testing or for saving a session file without opening a browser:

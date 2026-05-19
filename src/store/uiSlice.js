@@ -9,6 +9,7 @@ export const uiSlice = (set) => ({
       locateFiles: false,
       export: false,
       manual: false,
+      reorganize: false,
     },
     draft: null,
     highlightedControl: null,
