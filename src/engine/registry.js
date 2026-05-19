@@ -5,12 +5,16 @@ import { scatterChart } from './charts/scatter';
 import { pieChart } from './charts/pie';
 import { heatmapChart } from './charts/heatmap';
 import { networkChart } from './charts/network';
+import { lineChart } from './charts/line';
+import { boxplotChart } from './charts/boxplot';
 
 const CHARTS = {
   bar: barChart,
   stackedBar: stackedBarChart,
   histogram: histogramChart,
   scatter: scatterChart,
+  line: lineChart,
+  boxplot: boxplotChart,
   pie: pieChart,
   heatmap: heatmapChart,
   network: networkChart,

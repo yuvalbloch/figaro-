@@ -1,4 +1,4 @@
-import { ColumnPicker } from '@/components/data/ColumnPicker';
+import { ColumnPicker, MultiColumnPicker } from '@/components/data/ColumnPicker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/cn';
@@ -155,6 +155,24 @@ function ColumnField({ field, value, onChange, datasetId, highlighted }) {
   );
 }
 
+function ColumnsField({ field, value, onChange, datasetId, highlighted }) {
+  const count = Array.isArray(value) ? value.length : 0;
+  return (
+    <FieldShell
+      label={`${field.label + (field.required ? ' *' : '')}${count ? ` (${count} selected)` : ''}`}
+      hint={field.hint}
+      highlighted={highlighted}
+    >
+      <MultiColumnPicker
+        datasetId={datasetId}
+        value={value}
+        onChange={onChange}
+        filter={field.filter}
+      />
+    </FieldShell>
+  );
+}
+
 function PaletteField({ field, value, onChange, highlighted }) {
   const current = value || 'tableau10';
   const customPalette = useStore((s) => s.customPalette);
@@ -269,6 +287,8 @@ export function Field({ field, value, onChange, datasetId, highlighted }) {
       return <ColorField   field={field} value={value} onChange={onChange} highlighted={highlighted} />;
     case 'column':
       return <ColumnField  field={field} value={value} onChange={onChange} datasetId={datasetId} highlighted={highlighted} />;
+    case 'columns':
+      return <ColumnsField field={field} value={value} onChange={onChange} datasetId={datasetId} highlighted={highlighted} />;
     case 'palette':
       return <PaletteField field={field} value={value} onChange={onChange} highlighted={highlighted} />;
     case 'font':

@@ -113,6 +113,8 @@ Click a panel that contains a chart. In the Inspector, a row of chart-type butto
 | Stacked Bar | Stacked vertical bars |
 | Histogram | Distribution of a single numeric column |
 | Scatter | X/Y scatter plot (optional size and color encoding) |
+| Line | Connected line chart; supports multiple Y columns each drawn in a different color |
+| Box Plot | Box-and-whisker summary of a numeric column; optional grouping column creates one box per group |
 | Pie | Proportional slices |
 | Heatmap | 2-D grid colored by value |
 | Network | Force-directed node-link diagram |
@@ -127,6 +129,11 @@ Below the chart-type buttons the Inspector shows a **Data** section. Each row ma
 
 - **Dropdowns** list the available columns. Numeric columns are marked with `·№`; text columns with `·𝐀`. Some channels (like X and Y axes) only show numeric columns.
 - Leaving an optional channel blank (e.g., Color/Group) renders the chart without that encoding.
+- **Multi-column selectors** (used by the Line chart's Y columns) show a scrollable checklist. Tick as many numeric columns as needed; each selected column becomes a separate series drawn in a distinct color.
+
+**Line charts** require an X column and one or more Y columns. Rows are sorted by X value before drawing the line. Each Y column is plotted as an independent series.
+
+**Box Plot charts** require a numeric Values (Y) column. Adding a Group By (X) column creates one box per unique group value.
 
 **Network charts** use a single dataset where each row is an edge. Map **Source node** and **Target node** to the columns containing the node identifiers for each end of the edge. Optionally map **Edge weight** (numeric), **Color by** (groups nodes by a categorical column), and **Size by** (scales node size by a numeric column). Nodes are derived automatically from the unique values in the source and target columns.
 
