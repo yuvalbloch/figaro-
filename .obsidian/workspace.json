@@ -1,0 +1,217 @@
+{
+  "main": {
+    "id": "a16fb486119d0dad",
+    "type": "split",
+    "children": [
+      {
+        "id": "4cd5bf06c27015f5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "53e97d14437d6036",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "R_INTEGRATION.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "R_INTEGRATION"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "e6a2af824c26d688",
+    "type": "split",
+    "children": [
+      {
+        "id": "69f577658e6a206d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1eb42dc586414333",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "516609a0a5b1433b",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "73382d97af167e85",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "1be3a62ad6a7c062",
+    "type": "split",
+    "children": [
+      {
+        "id": "2385b2191d8edb63",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a5c8b8a2d2213edb",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "R_INTEGRATION.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for R_INTEGRATION"
+            }
+          },
+          {
+            "id": "f8d53724bb608eb8",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "R_INTEGRATION.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from R_INTEGRATION"
+            }
+          },
+          {
+            "id": "9e3bfe0d0b190558",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "751a4f2ada076ded",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "032d8b0639c09fcb",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "R_INTEGRATION.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of R_INTEGRATION"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "53e97d14437d6036",
+  "lastOpenFiles": [
+    "dist-r/assets/index.es-B4TVYn3d.js",
+    "dist-r/assets/index-Bsthlhze.js",
+    "node_modules/cross-env/README.md",
+    "node_modules/cross-env/CHANGELOG.md",
+    "node_modules/cross-spawn/README.md",
+    "node_modules/cross-env/package.json",
+    "node_modules/cross-spawn/package.json",
+    "node_modules/which/README.md",
+    "node_modules/cross-spawn/index.js",
+    "node_modules/which/CHANGELOG.md",
+    "node_modules/isexe/mode.js",
+    "node_modules/which/package.json",
+    "node_modules/path-key/index.d.ts",
+    "node_modules/isexe/index.js",
+    "node_modules/shebang-command/readme.md",
+    "node_modules/path-key/readme.md",
+    "node_modules/isexe/test/basic.js",
+    "node_modules/isexe/test",
+    "node_modules/shebang-regex/readme.md",
+    "node_modules/isexe/README.md",
+    "public/figaro_logo_v2.png",
+    "figaro-r/inst/www/figaro_logo_v2.png",
+    "figaro-r/figaro_logo_v2.png",
+    "dist-r/figaro_logo_v2.png",
+    "figaro-r/inst/www/examples/datasets.md",
+    "figaro-r/inst/www/figaro_logo2.png",
+    "figaro-r/inst/www/figaro_logo.svg",
+    "figaro-r/README.md"
+  ]
+}
