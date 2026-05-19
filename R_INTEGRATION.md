@@ -105,6 +105,29 @@ library(figaro)
 figaro(iris = iris)
 ```
 
+### Reinstalling after pulling new code
+
+Re-run `source("install.R")` in a **fresh** R session whenever you pull
+updates. The script auto-detects RStudio and restarts R for you if needed.
+
+If you ever see one of these errors after a reinstall —
+
+```
+Error: lazy-load database '.../figaro/R/figaro.rdb' is corrupt
+internal error -3 in R_decompress1
+package 'figaro' is in use and will not be installed
+```
+
+— it means the old figaro package was still loaded in memory when its files
+on disk were overwritten. To recover, either:
+
+```r
+figaro::figaro_repair()   # easiest — restarts R and reinstalls (RStudio)
+```
+
+or restart R manually (RStudio: *Session > Restart R*) and run
+`source("install.R")` again.
+
 ---
 
 ## 3. Basic usage
@@ -467,6 +490,13 @@ panels queued.
 ### `figaro_stop()`
 
 Stops the local server started by the most recent `figaro()` call.
+
+### `figaro_repair(repo = getwd())`
+
+Reinstalls figaro from source. Use this when you see a `lazy-load database ...
+is corrupt`, `internal error -3 in R_decompress1`, or `package 'figaro' is in
+use` error after pulling new code. Under RStudio it restarts R automatically
+and resumes the install; otherwise it prints recovery instructions.
 
 ### `build_session(inputs, name, canvas_preset, layout, row_sizes, col_sizes)`
 

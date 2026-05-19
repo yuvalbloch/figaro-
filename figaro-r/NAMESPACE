@@ -2,6 +2,7 @@
 
 export(add_panel)
 export(figaro)
+export(figaro_repair)
 export(figaro_stop)
 export(figaro_save)
 export(build_session)
