@@ -2,7 +2,7 @@ Package: figaro
 Title: Interactive Scientific Figure Composer
 Version: 0.1.0
 Authors@R: c(
-    person("Yuval", "Bloch", role = c("aut", "cre"), email = ""),
+    person("Yuval", "Bloch", role = c("aut", "cre"), email = "yuval.bloch2@gmail.com"),
     person("Kesem", "Abramov", role = "aut", email = "kesemk@post.bgu.ac.il"),
     person("Nathan", "Edelman", role = "aut"))
 Description: Opens the Figaro interactive figure composer in a local browser,
