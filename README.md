@@ -2,7 +2,7 @@
   <img src="public/figaro_logo_v2.png" alt="Figaro logo" height="250">
 </p>
 
-**Live app:** https://yuvalbloch.github.io/figaro-/
+**Live app:** [https://yuvalbloch.github.io/figaro-/](https://ecological-complexity-lab.github.io/figaro-/)
 
 **User manual:** [MANUAL.md](MANUAL.md) · **R integration:** [R_INTEGRATION.md](R_INTEGRATION.md)
 
