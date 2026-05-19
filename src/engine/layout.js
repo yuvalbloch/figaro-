@@ -3,7 +3,9 @@
 import { getTheme } from '@/themes/themes';
 
 export function baseLayout(plot, theme, ctx = {}) {
-  const t = getTheme(theme.name);
+  const t = theme.name === 'custom'
+    ? { showGridDefault: false, ...theme }
+    : getTheme(theme.name);
   const fontFamily = plot.style?.fontFamily || theme.globalFontFamily || t.fontFamily;
   const fontSize = plot.style?.fontSize || theme.baseFontSize || t.baseFontSize;
 

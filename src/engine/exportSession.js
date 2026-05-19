@@ -36,6 +36,7 @@ export async function exportSession(state) {
     theme: state.theme,
     labeling: state.labeling,
     customPalette: state.customPalette,
+    customThemeData: state.customThemeData,
     ...(Object.keys(fileData).length > 0 && { fileData }),
   };
 

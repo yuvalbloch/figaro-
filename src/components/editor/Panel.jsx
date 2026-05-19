@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDndContext, useDroppable, useDraggable } from '@dnd-kit/core';
-import { GripVertical } from 'lucide-react';
+import { GripVertical, X } from 'lucide-react';
 import { useStore } from '@/store';
 import { cn } from '@/lib/cn';
 import { EmptyPanel } from './EmptyPanel';
@@ -22,6 +22,9 @@ export function Panel({ region, label }) {
   const mergeRegions = useStore((s) => s.mergeRegions);
   const splitRegion = useStore((s) => s.splitRegion);
   const setPanel = useStore((s) => s.setPanel);
+  const removePlot = useStore((s) => s.removePlot);
+  const removeImageRef = useStore((s) => s.removeImageRef);
+  const setDraft = useStore((s) => s.setDraft);
 
   // Drop target — always enabled (not merge mode); logic in CanvasDndProvider decides whether to act
   const { setNodeRef: setDropRef, isOver } = useDroppable({
@@ -80,6 +83,20 @@ export function Panel({ region, label }) {
       return;
     }
     selectRegion(region.id);
+  };
+
+  const isNonEmpty = panel && panel.type !== 'empty';
+
+  const handleClear = (e) => {
+    e.stopPropagation();
+    if (panel.type === 'plot' && panel.plotId) {
+      setDraft(null);
+      removePlot(panel.plotId);
+      setPanel(region.id, { type: 'empty', plotId: undefined });
+    } else if (panel.type === 'image' && panel.imageRef) {
+      removeImageRef(panel.imageRef);
+      setPanel(region.id, { type: 'empty', imageRef: undefined });
+    }
   };
 
   const labelText =
@@ -146,6 +163,18 @@ export function Panel({ region, label }) {
         >
           <GripVertical className="h-3.5 w-3.5 text-neutral-400" />
         </div>
+      )}
+
+      {/* Clear button — visible on hover for non-empty panels, hidden in merge mode */}
+      {!mergeMode && isNonEmpty && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute top-1 right-1 z-10 p-0.5 rounded opacity-0 group-hover:opacity-60 hover:!opacity-100 hover:text-destructive transition-opacity"
+          title="Clear panel"
+        >
+          <X className="h-3.5 w-3.5 text-neutral-400 hover:text-destructive" />
+        </button>
       )}
     </div>
   );

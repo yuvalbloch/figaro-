@@ -8,6 +8,7 @@ import { LocateFilesDialog } from '@/components/dialogs/LocateFilesDialog';
 import { ExportDialog } from '@/components/dialogs/ExportDialog';
 import { ManualDialog } from '@/components/dialogs/ManualDialog';
 import { ReorganizeDialog } from '@/components/dialogs/ReorganizeDialog';
+import { CustomThemeDialog } from '@/components/dialogs/CustomThemeDialog';
 import { CanvasDndProvider } from '@/components/editor/CanvasDndProvider';
 import { useStore } from '@/store';
 import { restoreSession } from '@/persistence/idb';
@@ -108,6 +109,7 @@ export default function App() {
         <ExportDialog />
         <ManualDialog />
         <ReorganizeDialog />
+        <CustomThemeDialog />
       </div>
     </CanvasDndProvider>
   );

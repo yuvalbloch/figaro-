@@ -12,7 +12,17 @@
       "Read(//Users/kesemabramov/Library/R/x86_64/4.3/library/figaro/www/assets/**)",
       "Bash(sw_vers)",
       "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh)",
-      "Bash(bash)"
+      "Bash(bash)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/figaro-/)",
+      "Bash(git -C /Users/yuval/Desktop/figrao/figaro- diff --stat)",
+      "Bash(git -C /Users/yuval/Desktop/figrao/figaro- add MANUAL.md src/components/controls/fields.jsx src/components/data/ColumnPicker.jsx src/engine/registry.js src/engine/charts/boxplot.js src/engine/charts/line.js)",
+      "Bash(git -C /Users/yuval/Desktop/figrao/figaro- commit -m ' *)",
+      "Bash(gh issue *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5174/figaro-/)",
+      "Bash(curl -s http://localhost:5174/figaro-/)",
+      "Bash(lsof -ti:5173)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['title']\\); print\\(d['body'][:300]\\)\")",
+      "Bash(xargs cat -n)"
     ]
   }
 }

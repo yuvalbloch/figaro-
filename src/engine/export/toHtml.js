@@ -48,7 +48,8 @@ export async function toHtml(state) {
       const rows = plot?.datasetId ? loaded[plot.datasetId]?.rows : null;
       if (plot && rows?.length) {
         const chart = getChart(plot.type);
-        if (chart) plotData[region.id] = chart.render(plot, rows, { theme, customPalette });
+        const resolvedTheme = theme.name === 'custom' ? { ...theme, ...state.customThemeData } : theme;
+        if (chart) plotData[region.id] = chart.render(plot, rows, { theme: resolvedTheme, customPalette });
       }
     }
   }

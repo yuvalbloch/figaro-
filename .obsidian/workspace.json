@@ -11,14 +11,10 @@
             "id": "53e97d14437d6036",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "R_INTEGRATION.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "R_INTEGRATION"
+              "title": "New tab"
             }
           }
         ]
@@ -185,33 +181,40 @@
   },
   "active": "53e97d14437d6036",
   "lastOpenFiles": [
-    "dist-r/assets/index.es-B4TVYn3d.js",
-    "dist-r/assets/index-Bsthlhze.js",
+    "MANUAL.md.tmp.6357.e09c0fcb64e2",
+    "src/store/index.js.tmp.6357.b4efc51e1be7",
+    "dist/index.html",
+    "dist/assets/purify.es-BwoZCkIS.js",
+    "dist/assets/index.es-BuyWQLsl.js",
+    "dist/assets/index-DFCG9QJB.css",
+    "dist/assets/index-BUALOIUu.js",
+    "dist/assets/html2canvas.esm-CBrSDip1.js",
+    "dist/assets",
+    "src/components/dialogs/CustomThemeDialog.jsx",
+    "src/engine/exportSession.js.tmp.6357.1b3806a36c62",
+    "ISSUES_PLAN.md",
+    "public/figaro_logo_v2.png",
+    "figaro_logo_v2.png",
+    "figaro-r/inst/www/examples/datasets.md",
+    "figaro-r/inst/www/figaro_logo_v2.png",
+    "figaro-r/inst/www/figaro_logo.svg",
+    "figaro-r/figaro_logo_v2.png",
+    "figaro-r/README.md",
+    "R_INTEGRATION.md",
+    "PLAN_R_PACKAGE.md",
+    "dist-r/examples/datasets.md",
+    "dist-r/figaro_logo_v2.png",
+    "dist-r/figaro_logo.svg",
+    "dist/figaro_logo_v2.png",
     "node_modules/cross-env/README.md",
     "node_modules/cross-env/CHANGELOG.md",
     "node_modules/cross-spawn/README.md",
-    "node_modules/cross-env/package.json",
-    "node_modules/cross-spawn/package.json",
     "node_modules/which/README.md",
-    "node_modules/cross-spawn/index.js",
     "node_modules/which/CHANGELOG.md",
-    "node_modules/isexe/mode.js",
-    "node_modules/which/package.json",
-    "node_modules/path-key/index.d.ts",
-    "node_modules/isexe/index.js",
     "node_modules/shebang-command/readme.md",
     "node_modules/path-key/readme.md",
-    "node_modules/isexe/test/basic.js",
-    "node_modules/isexe/test",
     "node_modules/shebang-regex/readme.md",
     "node_modules/isexe/README.md",
-    "public/figaro_logo_v2.png",
-    "figaro-r/inst/www/figaro_logo_v2.png",
-    "figaro-r/figaro_logo_v2.png",
-    "dist-r/figaro_logo_v2.png",
-    "figaro-r/inst/www/examples/datasets.md",
-    "figaro-r/inst/www/figaro_logo2.png",
-    "figaro-r/inst/www/figaro_logo.svg",
-    "figaro-r/README.md"
+    "figaro-r/inst/www/figaro_logo2.png"
   ]
 }

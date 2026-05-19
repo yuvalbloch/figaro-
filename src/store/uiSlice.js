@@ -10,6 +10,7 @@ export const uiSlice = (set) => ({
       export: false,
       manual: false,
       reorganize: false,
+      customTheme: false,
     },
     draft: null,
     highlightedControl: null,

@@ -57,6 +57,7 @@ export function PlotEngine({ regionId, plotId }) {
   );
   const theme = useStore((s) => s.theme);
   const customPalette = useStore((s) => s.customPalette);
+  const customThemeData = useStore((s) => s.customThemeData);
   const sharedX = useStore((s) =>
     plot?.shareXWithRow ? computeSharedRange(regionId, 'x', s) : null
   );
@@ -81,7 +82,8 @@ export function PlotEngine({ regionId, plotId }) {
       return;
     }
 
-    const result = chart.render(plot, rows, { theme, customPalette, plotId, edgesRows: edgesRows || [] });
+    const resolvedTheme = theme.name === 'custom' ? { ...theme, ...customThemeData } : theme;
+    const result = chart.render(plot, rows, { theme: resolvedTheme, customPalette, plotId, edgesRows: edgesRows || [] });
     if (sharedX) result.layout.xaxis = { ...(result.layout.xaxis || {}), range: sharedX, autorange: false };
     if (sharedY) result.layout.yaxis = { ...(result.layout.yaxis || {}), range: sharedY, autorange: false };
 
@@ -95,7 +97,7 @@ export function PlotEngine({ regionId, plotId }) {
       attachHighlightListeners(el);
       attachModebarAutoHide(el);
     });
-  }, [plot, dataset, rows, edgesRows, theme, customPalette, sharedX, sharedY, plotId]);
+  }, [plot, dataset, rows, edgesRows, theme, customPalette, customThemeData, sharedX, sharedY, plotId]);
 
   // Register in plotRegistry for export
   useEffect(() => {

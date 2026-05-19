@@ -23,6 +23,7 @@
 15. [Themes](#15-themes)
 16. [Exporting the figure](#16-exporting-the-figure)
 17. [Saving and opening sessions](#17-saving-and-opening-sessions)
+18. [Undoing changes](#18-undoing-changes)
 
 ---
 
@@ -102,7 +103,7 @@ Drag a dataset card from the Data sidebar onto any empty panel. A chart is creat
 
 To **replace** the dataset on an existing plot, use the Inspector: click the panel, then use the dataset-related controls to select a different dataset.
 
-To **clear** a panel back to empty, click the panel, then click **Clear panel** (trash icon) at the bottom of the Inspector.
+To **clear** a panel back to empty, hover over the panel and click the **×** button that appears in the top-right corner. This removes the chart (or image) and its dataset connection, returning the panel to the empty state. You can also clear from the Inspector: click the panel, then click **Clear panel** (trash icon) at the bottom of the Inspector.
 
 ---
 
@@ -236,7 +237,7 @@ When an image panel is selected, the Inspector shows:
 - **Background** — choose a background color with the color picker, or click **None** for transparent
 - **Border** — set a border width (0–20 px) and border color
 
-Click **Clear panel** to remove the image and return the panel to the empty state.
+Click **Clear panel** to remove the image and return the panel to the empty state. You can also hover over the panel and click the **×** button in the top-right corner.
 
 ---
 
@@ -333,8 +334,22 @@ The **Theme** dropdown in the top bar applies a global visual style to the canva
 | **Light Minimal** | White background, dark text — default |
 | **Dark Minimal** | Dark background, light text |
 | **Publication** | White background, black text, Merriweather serif font — suited for journals |
+| **Custom** | Fully configurable — opens the custom theme editor |
 
 Switching themes updates the default font, colors, and background for the entire figure.
+
+### Custom theme
+
+Select **Custom** from the theme dropdown to open the theme editor. You can configure:
+
+- **Background** — canvas and legend background color
+- **Text** — axis labels, tick labels, title, and legend text color
+- **Gridline** — grid line color
+- **Axis Line** — axis and border line color
+- **Font family** — choose from Inter, Merriweather, IBM Plex Mono, or Lato
+- **Base font size** — base size in pixels (8–24)
+
+A live preview shows how the colors and font will look. Click **Apply** to activate the theme. While the Custom theme is active, click the pencil icon next to the theme dropdown to re-open the editor.
 
 ---
 
@@ -391,3 +406,13 @@ If the session references data files or images that have moved or been renamed, 
 3. A green checkmark confirms the file is re-linked.
 
 Click **Done** (or **Skip** to proceed without re-linking all files) to finish loading.
+
+---
+
+## 18. Undoing and redoing changes
+
+Click the **Undo** button (↩ arrow icon) in the top bar to step back through recent changes. Up to five undo steps are available per session.
+
+Click the **Redo** button (↪ arrow icon) to reapply a change that was just undone. The redo stack is cleared as soon as you make a new change.
+
+Both buttons are disabled when there is nothing to revert or reapply. Rapid interactions (such as dragging a slider) are grouped into a single undo/redo step rather than producing one entry per frame.

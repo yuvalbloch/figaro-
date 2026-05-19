@@ -37,7 +37,7 @@ export const CHART_TYPES = [
 
 export const PALETTES = ['viridis', 'set2', 'tableau10', 'grayscale', 'custom'];
 
-export const THEMES = ['lightMinimal', 'darkMinimal', 'publication'];
+export const THEMES = ['lightMinimal', 'darkMinimal', 'publication', 'custom'];
 
 export const FONTS = ['Inter', 'Merriweather', 'IBM Plex Mono', 'Lato'];
 

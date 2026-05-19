@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/store';
 import { THEME_DATA } from '@/themes/themes';
-import { FilePlus2, FolderOpen, Save, Download, CircleHelp, Check } from 'lucide-react';
+import { FilePlus2, FolderOpen, Save, Download, CircleHelp, Check, Pencil, Undo2, Redo2 } from 'lucide-react';
 import { exportSession } from '@/engine/exportSession';
 import { importSession } from '@/engine/importSession';
 
@@ -14,7 +14,12 @@ export function TopBar() {
   const hasLayout = useStore((s) => s.layout.rows > 0);
   const theme = useStore((s) => s.theme);
   const setTheme = useStore((s) => s.setTheme);
+  const customThemeData = useStore((s) => s.customThemeData);
   const idbSavedAt = useStore((s) => s.ui.idbSavedAt);
+  const canUndo = useStore((s) => s._history.length > 0);
+  const undo = useStore((s) => s.undo);
+  const canRedo = useStore((s) => s._future.length > 0);
+  const redo = useStore((s) => s.redo);
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
@@ -39,6 +44,11 @@ export function TopBar() {
 
   const handleThemeChange = (e) => {
     const name = e.target.value;
+    if (name === 'custom') {
+      setTheme({ name: 'custom', globalFontFamily: customThemeData.fontFamily, baseFontSize: customThemeData.baseFontSize });
+      openDialog('customTheme');
+      return;
+    }
     const t = THEME_DATA[name];
     if (t) setTheme({ name, globalFontFamily: t.fontFamily, baseFontSize: t.baseFontSize });
   };
@@ -128,9 +138,41 @@ export function TopBar() {
           {Object.values(THEME_DATA).map((t) => (
             <option key={t.name} value={t.name}>{t.label}</option>
           ))}
+          <option value="custom">Custom</option>
         </select>
+        {theme.name === 'custom' && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => openDialog('customTheme')}
+            title="Edit custom theme"
+            className="h-8 w-8 text-muted-foreground"
+          >
+            <Pencil className="h-3 w-3" />
+          </Button>
+        )}
 
         <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={undo}
+            disabled={!canUndo}
+            title="Undo"
+            className="h-8 w-8 text-muted-foreground"
+          >
+            <Undo2 className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={redo}
+            disabled={!canRedo}
+            title="Redo"
+            className="h-8 w-8 text-muted-foreground"
+          >
+            <Redo2 className="h-4 w-4" />
+          </Button>
           <Button variant="ghost" size="sm" onClick={() => openDialog('newSession')}>
             <FilePlus2 className="h-4 w-4" />
             New
