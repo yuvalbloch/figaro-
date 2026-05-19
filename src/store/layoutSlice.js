@@ -111,7 +111,11 @@ export const layoutSlice = (set, get) => ({
     const nextPanels = { ...panels };
     delete nextPanels[idA];
     delete nextPanels[idB];
-    nextPanels[newId] = panels[idA] || { type: 'empty', label: { text: '', auto: true } };
+    const panelA = panels[idA] || { type: 'empty', label: { text: '', auto: true } };
+    const panelB = panels[idB] || { type: 'empty', label: { text: '', auto: true } };
+    // Prefer the panel that has content so merge order doesn't matter
+    const winner = (panelA.type === 'empty' && panelB.type !== 'empty') ? panelB : panelA;
+    nextPanels[newId] = winner;
 
     set({ layout: { ...layout, regions: nextRegions }, panels: nextPanels });
     return { ok: true, newId };

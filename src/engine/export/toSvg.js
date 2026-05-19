@@ -99,7 +99,10 @@ export async function toSvg(state, { plotFormat = 'png' } = {}) {
           ? panel.label.text
           : autoLabels[region.id];
       if (text) {
-        const lp = labelSvgAttrs(rect, labeling.position, labeling.fontSize);
+        const off = panel.label?.offset;
+        const lp = off
+          ? { x: rect.x + off.x * rect.w, y: rect.y + off.y * rect.h, anchor: 'start', baseline: 'hanging' }
+          : labelSvgAttrs(rect, labeling.position, labeling.fontSize);
         const weight = labeling.bold ? 'bold' : 'normal';
         parts.push(
           `<text x="${lp.x}" y="${lp.y}" font-size="${labeling.fontSize}" font-weight="${weight}" text-anchor="${lp.anchor}" dominant-baseline="${lp.baseline}" fill="black">${escXml(text)}</text>`

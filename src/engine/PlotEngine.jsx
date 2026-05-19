@@ -8,24 +8,43 @@ import { useStore } from '@/store';
 
 // SVG class → inspector control key mapping
 const SVG_CLICK_MAP = [
-  { selector: '.gtitle',           controlKey: 'title'  },
-  { selector: '.xtitle',           controlKey: 'xLabel' },
-  { selector: '.ytitle',           controlKey: 'yLabel' },
-  { selector: '.legend',           controlKey: 'legend' },
-  { selector: '.xtick text',       controlKey: 'ticks'  },
-  { selector: '.ytick text',       controlKey: 'ticks'  },
+  { selector: '.gtitle',     controlKey: 'title',  cursor: 'pointer' },
+  { selector: '.xtitle',     controlKey: 'xLabel', cursor: 'pointer' },
+  { selector: '.ytitle',     controlKey: 'yLabel', cursor: 'pointer' },
+  { selector: '.legend',     controlKey: 'legend', cursor: 'grab'    },
+  { selector: '.xtick text', controlKey: 'ticks',  cursor: 'pointer' },
+  { selector: '.ytick text', controlKey: 'ticks',  cursor: 'pointer' },
 ];
 
 function attachHighlightListeners(el) {
   const { setHighlightedControl } = useStore.getState();
-  SVG_CLICK_MAP.forEach(({ selector, controlKey }) => {
+  SVG_CLICK_MAP.forEach(({ selector, controlKey, cursor }) => {
     el.querySelectorAll(selector).forEach((node) => {
-      node.style.cursor = 'pointer';
+      node.style.cursor = cursor || 'pointer';
       node.onclick = (e) => {
         e.stopPropagation();
         setHighlightedControl(controlKey);
       };
     });
+  });
+}
+
+function attachModebarAutoHide(el) {
+  const container = el.querySelector('.modebar-container');
+  if (!container) return;
+  container.querySelectorAll('.modebar-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      container.style.opacity = '0';
+      container.style.pointerEvents = 'none';
+      // Restore only when the mouse fully leaves the chart — not on next mousemove,
+      // because the mouse is still hovering after the click and would re-show immediately.
+      const restore = () => {
+        container.style.opacity = '';
+        container.style.pointerEvents = '';
+        el.removeEventListener('mouseleave', restore);
+      };
+      el.addEventListener('mouseleave', restore);
+    }, { once: true });
   });
 }
 
@@ -69,9 +88,13 @@ export function PlotEngine({ regionId, plotId }) {
     setWarnings(result.warnings || []);
     Plotly.react(ref.current, result.data, result.layout, baseConfig);
 
-    // Attach SVG click listeners after Plotly finishes painting
+    // Attach SVG click listeners and modebar auto-hide after Plotly finishes painting
     const el = ref.current;
-    requestAnimationFrame(() => { if (el) attachHighlightListeners(el); });
+    requestAnimationFrame(() => {
+      if (!el) return;
+      attachHighlightListeners(el);
+      attachModebarAutoHide(el);
+    });
   }, [plot, dataset, rows, edgesRows, theme, customPalette, sharedX, sharedY, plotId]);
 
   // Register in plotRegistry for export
@@ -94,11 +117,14 @@ export function PlotEngine({ regionId, plotId }) {
       if ('title.x'  in eventData) stylePatch.titleX  = eventData['title.x'];
       if (Object.keys(stylePatch).length === 0) return;
       const current = useStore.getState().plots[plotId];
-      if (current) {
-        useStore.getState().patchPlot(plotId, {
-          style: { ...current.style, ...stylePatch },
-        });
-      }
+      if (!current) return;
+      const style = current.style || {};
+      // Guard: skip if every value is unchanged — Plotly.react fires plotly_relayout
+      // after each render even for unchanged props, causing an infinite loop without this.
+      if (!Object.entries(stylePatch).some(([k, v]) => style[k] !== v)) return;
+      useStore.getState().patchPlot(plotId, {
+        style: { ...style, ...stylePatch },
+      });
     };
 
     el.on?.('plotly_relayout', handler);

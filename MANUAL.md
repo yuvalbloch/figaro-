@@ -1,6 +1,6 @@
 # Figaro — User Manual
 
-**Live app:** https://&lt;your-github-username&gt;.github.io/figaro-/
+**Live app:** https://yuvalbloch.github.io/figaro-/
 
 ---
 
@@ -17,11 +17,12 @@
 9. [Inserting images](#9-inserting-images)
 10. [Merging and splitting cells](#10-merging-and-splitting-cells)
 11. [Resizing rows and columns](#11-resizing-rows-and-columns)
-12. [Linking axes across panels](#12-linking-axes-across-panels)
-13. [Panel labels](#13-panel-labels)
-14. [Themes](#14-themes)
-15. [Exporting the figure](#15-exporting-the-figure)
-16. [Saving and opening sessions](#16-saving-and-opening-sessions)
+12. [Resetting zoom](#12-resetting-zoom)
+13. [Linking axes across panels](#13-linking-axes-across-panels)
+14. [Panel labels](#14-panel-labels)
+15. [Themes](#15-themes)
+16. [Exporting the figure](#16-exporting-the-figure)
+17. [Saving and opening sessions](#17-saving-and-opening-sessions)
 
 ---
 
@@ -37,6 +38,8 @@ The app is divided into three areas:
 | **Top bar** | Session controls, theme, export |
 
 Click any panel on the canvas to select it. The Inspector on the right updates to show that panel's controls. Click the canvas background to deselect.
+
+When no panel is selected, the Inspector shows **global panel label settings** (style, position, font size, bold toggle).
 
 ---
 
@@ -151,7 +154,7 @@ Click directly on any text element inside a chart — the title, an axis label, 
 
 ### Repositioning chart elements
 
-- **Legend** — drag the legend to any position on the chart. The position is saved and restored every time the chart re-renders.
+- **Legend** — drag the legend by its border box to any position on the chart. The legend has a solid background and border to make it easy to grab. The position is saved and restored every time the chart re-renders.
 - **Title horizontal position** — use the **Title position** slider (0 = left edge, 1 = right edge) to place the title. The value is also updated automatically if you drag the title within Plotly.
 
 ### Title and labels
@@ -274,7 +277,13 @@ Hover over the thin divider line between any two rows or two columns. The cursor
 
 ---
 
-## 12. Linking axes across panels
+## 12. Resetting zoom
+
+After panning or zooming a chart interactively, click the panel to select it, then click **Reset zoom** at the bottom of the Inspector. This restores both axes to their auto-range (fit-to-data) state.
+
+---
+
+## 13. Linking axes across panels
 
 When multiple panels in the same row or column show related data, you can synchronize their axis ranges so they remain consistent as you zoom or change data.
 
@@ -287,18 +296,25 @@ Linked axes update together whenever one plot's range changes.
 
 ---
 
-## 13. Panel labels
+## 14. Panel labels
 
 Panels are automatically labeled in reading order (left-to-right, top-to-bottom) using letters (A, B, C…) by default. Labels appear inside or outside the panel corner depending on global settings.
 
 ### Changing the label style globally
 
-In the top bar, label settings control all panels at once:
+Click anywhere on the canvas background (deselect all panels). The right sidebar shows **Panel labels** settings:
 
+- **Show labels** — toggle to hide or show all auto-labels
 - **Style** — choose A / a / 1 / (A) / (a) / (1)
 - **Position** — top-left-inside, top-right-inside, top-left-outside, or top-right-outside
 - **Font size** — numeric field (default 14)
 - **Bold** — toggle
+
+### Dragging a label to reposition it
+
+Every label can be dragged freely within its panel. Hover over the label — the cursor turns into a grab hand — then click and drag it to any position inside the panel. The position is saved per panel and is preserved in exported SVG/PNG files.
+
+To move a label back to its default corner position, select the panel and click **Reset position** (appears next to the **Label** heading in the Inspector whenever a custom position is active).
 
 ### Overriding a single panel's label
 
@@ -308,7 +324,7 @@ Select a panel. In the Inspector under the **Label** section:
 
 ---
 
-## 14. Themes
+## 15. Themes
 
 The **Theme** dropdown in the top bar applies a global visual style to the canvas and all charts:
 
@@ -322,7 +338,7 @@ Switching themes updates the default font, colors, and background for the entire
 
 ---
 
-## 15. Exporting the figure
+## 16. Exporting the figure
 
 Click the **Export** button (download icon) in the top bar. A dialog opens with four format tabs:
 
@@ -345,7 +361,7 @@ Click **Export [FORMAT]** to download the file. The file is named after the figu
 
 ---
 
-## 16. Saving and opening sessions
+## 17. Saving and opening sessions
 
 ### Browser auto-save
 

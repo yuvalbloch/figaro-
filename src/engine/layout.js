@@ -63,15 +63,20 @@ export function baseLayout(plot, theme, ctx = {}) {
     showlegend: showLegend,
     legend: {
       font: { family: fontFamily, size: legendFontSize, color: t.text },
+      bgcolor: t.background,
+      borderwidth: 1,
+      bordercolor: t.axisLine,
       ...(plot.style?.legendX != null && { x: plot.style.legendX }),
       ...(plot.style?.legendY != null && { y: plot.style.legendY }),
     },
     hovermode: 'closest',
+    modebar: { orientation: 'v' },
   };
 }
 
 export const baseConfig = {
   responsive: true,
   displaylogo: false,
-  modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d'],
+  modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d', 'zoom2d'],
+  edits: { legendPosition: true },
 };

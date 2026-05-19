@@ -16,7 +16,9 @@
   GeomPath      = "line",
   GeomBar       = "bar",
   GeomCol       = "bar",
-  GeomHistogram = "histogram"
+  GeomHistogram = "histogram",
+  GeomBoxplot   = "boxplot",
+  GeomTile      = "heatmap"
 )
 
 #' Try to extract a ggplot2 object as a native Figaro plot entry.
@@ -43,8 +45,7 @@ ggplot_to_figaro <- function(p, ds_id, plot_id) {
   if (is.na(chart_type))
     return(list(ok = FALSE, reason = paste("unsupported geom:", geom_cls)))
 
-  # Figaro only has scatter / bar / histogram so far
-  if (!chart_type %in% c("scatter", "bar", "histogram"))
+  if (!chart_type %in% c("scatter", "bar", "histogram", "line", "boxplot", "heatmap"))
     return(list(ok = FALSE, reason = paste("chart type not in Figaro:", chart_type)))
 
   # Merge top-level and layer-level mappings; layer overrides global
@@ -101,6 +102,18 @@ ggplot_to_figaro <- function(p, ds_id, plot_id) {
     if (!is.null(color_col)) params$group <- color_col
   } else if (chart_type == "histogram") {
     if (!is.null(x_col))     params$x <- x_col
+  } else if (chart_type == "line") {
+    if (!is.null(x_col))     params$x  <- x_col
+    if (!is.null(y_col))     params$ys <- list(y_col)
+  } else if (chart_type == "boxplot") {
+    # y → Values column; fill/color → optional Group column
+    if (!is.null(y_col))     params$y     <- y_col
+    if (!is.null(color_col)) params$group <- color_col
+  } else if (chart_type == "heatmap") {
+    # aes(x, y, fill) → x, y, z (fill is the value encoded by color)
+    if (!is.null(x_col))     params$x <- x_col
+    if (!is.null(y_col))     params$y <- y_col
+    if (!is.null(color_col)) params$z <- color_col
   }
 
   style <- list(

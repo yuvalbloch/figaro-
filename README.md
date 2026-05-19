@@ -10,9 +10,17 @@ A browser-based editor for composing multi-panel scientific figures. Build a gri
 
 ---
 
-## Running locally
+## Getting started
+
+### Use the hosted app
+
+Open **https://yuvalbloch.github.io/figaro-/** in any modern browser — no installation required.
+
+### Run locally
 
 ```bash
+git clone https://github.com/yuvalbloch/figaro-.git
+cd figaro-
 npm install
 npm run dev
 ```
@@ -25,6 +33,31 @@ To build and preview the production bundle:
 npm run build
 npm run preview
 ```
+
+---
+
+## R package installation
+
+The `figaro` R package is bundled in this repository (not on CRAN). Installation requires cloning the repo first:
+
+```bash
+git clone https://github.com/yuvalbloch/figaro-.git
+```
+
+Then from an R console with the working directory set to the cloned folder:
+
+```r
+source("install.R")
+```
+
+The script installs required dependencies and the `figaro` package from source. After it finishes:</p>
+
+```r
+library(figaro)
+figaro(my_data = my_df)
+```
+
+See [R_INTEGRATION.md](R_INTEGRATION.md) for the complete guide including ggplot2 support, base-R plots, and image inputs.
 
 ---
 

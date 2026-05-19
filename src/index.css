@@ -41,3 +41,11 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+/* Plotly modebar: vertical stack on the left edge of the chart */
+.js-plotly-plot .modebar-container {
+  right: auto !important;
+  left: 4px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}

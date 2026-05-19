@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useDndContext, useDroppable, useDraggable } from '@dnd-kit/core';
 import { GripVertical } from 'lucide-react';
 import { useStore } from '@/store';
@@ -20,6 +21,7 @@ export function Panel({ region, label }) {
   const setMergeFirst = useStore((s) => s.setMergeFirst);
   const mergeRegions = useStore((s) => s.mergeRegions);
   const splitRegion = useStore((s) => s.splitRegion);
+  const setPanel = useStore((s) => s.setPanel);
 
   // Drop target — always enabled (not merge mode); logic in CanvasDndProvider decides whether to act
   const { setNodeRef: setDropRef, isOver } = useDroppable({
@@ -83,6 +85,12 @@ export function Panel({ region, label }) {
   const labelText =
     panel?.label?.auto === false && panel?.label?.text ? panel.label.text : label;
 
+  const labelOffset = panel?.label?.offset ?? null;
+  const handleLabelOffsetChange = useCallback((xFrac, yFrac) => {
+    const existing = panel?.label || { auto: true, text: '' };
+    setPanel(region.id, { label: { ...existing, offset: { x: xFrac, y: yFrac } } });
+  }, [setPanel, region.id, panel?.label]);
+
   return (
     <div
       ref={setDropRef}
@@ -121,6 +129,8 @@ export function Panel({ region, label }) {
           position={labeling.position}
           fontSize={labeling.fontSize}
           bold={labeling.bold}
+          offset={labelOffset}
+          onOffsetChange={handleLabelOffsetChange}
         />
       )}
 

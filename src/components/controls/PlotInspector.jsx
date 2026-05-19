@@ -1,10 +1,12 @@
 import { useEffect, useMemo } from 'react';
+import Plotly from 'plotly.js-dist-min';
 import { useStore } from '@/store';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Field } from './fields';
 import { getChart, listCharts } from '@/engine/registry';
-import { Trash2, Check, Undo2, Shuffle } from 'lucide-react';
+import { plotRegistry } from '@/engine/plotRegistry';
+import { Trash2, Check, Undo2, Shuffle, ZoomOut } from 'lucide-react';
 
 const CHART_TYPES = listCharts();
 
@@ -209,7 +211,18 @@ export function PlotInspector({ regionId, panel }) {
         </label>
       </div>
 
-      <div className="pt-3 border-t border-border">
+      <div className="pt-3 border-t border-border flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const el = plotRegistry.get(panel.plotId);
+            if (el) Plotly.relayout(el, { 'xaxis.autorange': true, 'yaxis.autorange': true });
+          }}
+        >
+          <ZoomOut className="h-3.5 w-3.5" />
+          Reset zoom
+        </Button>
         <Button variant="outline" size="sm" onClick={onClear}>
           <Trash2 className="h-3.5 w-3.5" />
           Clear panel

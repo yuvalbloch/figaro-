@@ -2,9 +2,103 @@ import { useStore } from '@/store';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { SlidersHorizontal, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { PlotInspector } from './PlotInspector';
 import { RPlotStyleInspector } from './RPlotStyleInspector';
+
+const LABEL_STYLES = ['A', 'a', '1', '(A)', '(a)', '(1)'];
+const LABEL_POSITIONS = [
+  { value: 'top-left-inside',  label: 'Top-left (inside)'  },
+  { value: 'top-right-inside', label: 'Top-right (inside)' },
+  { value: 'top-left-outside', label: 'Top-left (outside)' },
+  { value: 'top-right-outside',label: 'Top-right (outside)'},
+];
+
+function GlobalLabelSettings() {
+  const labeling    = useStore((s) => s.labeling);
+  const setLabeling = useStore((s) => s.setLabeling);
+
+  return (
+    <div className="space-y-3">
+      <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+        Panel labels
+      </Label>
+
+      <label className="flex items-center gap-2 text-sm cursor-pointer">
+        <input
+          type="checkbox"
+          checked={labeling.enabled}
+          onChange={(e) => setLabeling({ enabled: e.target.checked })}
+          className="h-4 w-4"
+        />
+        <span>Show labels</span>
+      </label>
+
+      {labeling.enabled && (
+        <>
+          <div className="space-y-1">
+            <Label className="text-xs">Style</Label>
+            <div className="flex flex-wrap gap-1">
+              {LABEL_STYLES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setLabeling({ style: s })}
+                  className={
+                    'px-2 py-1 text-xs rounded border ' +
+                    (labeling.style === s
+                      ? 'border-primary bg-accent font-medium'
+                      : 'border-input hover:bg-accent')
+                  }
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-xs">Position</Label>
+            <select
+              value={labeling.position}
+              onChange={(e) => setLabeling({ position: e.target.value })}
+              className="w-full h-8 rounded-md border border-input bg-background px-2 text-xs"
+            >
+              {LABEL_POSITIONS.map((p) => (
+                <option key={p.value} value={p.value}>{p.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1">
+              <Label className="text-xs">Font size</Label>
+              <Input
+                type="number"
+                min={6}
+                max={48}
+                value={labeling.fontSize}
+                onChange={(e) => setLabeling({ fontSize: Number(e.target.value) || 14 })}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Bold</Label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer mt-2">
+                <input
+                  type="checkbox"
+                  checked={labeling.bold}
+                  onChange={(e) => setLabeling({ bold: e.target.checked })}
+                  className="h-4 w-4"
+                />
+                <span>Bold</span>
+              </label>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 function PanelLabelEditor({ regionId, panel }) {
   const setPanel = useStore((s) => s.setPanel);
@@ -14,6 +108,7 @@ function PanelLabelEditor({ regionId, panel }) {
 
   const label = panel?.label || { auto: true, text: '' };
   const auto = label.auto !== false;
+  const hasOffset = !!label.offset;
 
   const setAuto = (v) =>
     setPanel(regionId, {
@@ -23,11 +118,25 @@ function PanelLabelEditor({ regionId, panel }) {
   const setText = (text) =>
     setPanel(regionId, { label: { auto: false, text } });
 
+  const resetOffset = () =>
+    setPanel(regionId, { label: { ...label, offset: undefined } });
+
   return (
     <div className="space-y-2 pb-4 border-b border-border">
-      <Label className="text-xs uppercase tracking-wider text-muted-foreground">
-        Label
-      </Label>
+      <div className="flex items-center justify-between">
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+          Label
+        </Label>
+        {hasOffset && (
+          <button
+            type="button"
+            onClick={resetOffset}
+            className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2"
+          >
+            Reset position
+          </button>
+        )}
+      </div>
       <label className="flex items-center gap-2 text-sm cursor-pointer">
         <input
           type="checkbox"
@@ -175,13 +284,7 @@ export function ControlPanel() {
 
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {!selectedRegionId ? (
-          <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-            <SlidersHorizontal className="h-8 w-8 mb-3 opacity-40" />
-            <p className="text-sm">Nothing selected</p>
-            <p className="text-xs mt-1 leading-relaxed max-w-[28ch]">
-              Click a panel on the canvas to edit its content and styling.
-            </p>
-          </div>
+          <GlobalLabelSettings />
         ) : (
           <>
             <PanelLabelEditor regionId={selectedRegionId} panel={panel} />
