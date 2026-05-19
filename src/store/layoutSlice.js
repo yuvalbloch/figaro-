@@ -117,6 +117,27 @@ export const layoutSlice = (set, get) => ({
     return { ok: true, newId };
   },
 
+  appendPanel: ({ regionId, panelDef }) =>
+    set((s) => {
+      const newCols = s.layout.cols + 1;
+      const region = {
+        id: regionId,
+        rowStart: 1,
+        rowEnd: s.layout.rows + 1,
+        colStart: newCols,
+        colEnd: newCols + 1,
+      };
+      return {
+        layout: {
+          ...s.layout,
+          cols: newCols,
+          colSizes: [...s.layout.colSizes, 1],
+          regions: [...s.layout.regions, region],
+        },
+        panels: { ...s.panels, [regionId]: panelDef },
+      };
+    }),
+
   splitRegion: (regionId) => {
     const { layout, panels } = get();
     const r = layout.regions.find((x) => x.id === regionId);

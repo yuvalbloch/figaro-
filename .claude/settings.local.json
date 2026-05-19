@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(npm install *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(/usr/local/bin/npm run *)",
+      "Bash(/opt/homebrew/bin/npm run *)",
+      "Bash(npx vite *)",
+      "Bash(which node *)",
+      "Read(//usr/local/bin/**)"
     ]
   }
 }

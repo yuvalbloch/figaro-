@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { TopBar } from '@/components/topbar/TopBar';
 import { DataManager } from '@/components/data/DataManager';
 import { Canvas } from '@/components/editor/Canvas';
@@ -18,6 +18,11 @@ export default function App() {
   const attachLoaded = useStore((s) => s.attachLoaded);
   const setIdbSavedAt = useStore((s) => s.setIdbSavedAt);
   const requestCanvasFit = useStore((s) => s.requestCanvasFit);
+  const appendPanel = useStore((s) => s.appendPanel);
+  const addDataset = useStore((s) => s.addDataset);
+  const addImageRef = useStore((s) => s.addImageRef);
+  const setPlot = useStore((s) => s.setPlot);
+  const pollingRef = useRef(null);
 
   useEffect(() => {
     const injected = window.__FIGARO_INITIAL_SESSION__;
@@ -45,6 +50,40 @@ export default function App() {
         setIdbSavedAt(Date.now());
       })
       .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const rServer = window.__FIGARO_R_SERVER__;
+    if (!rServer) return;
+
+    const poll = async () => {
+      try {
+        const res = await fetch(`${rServer}/pending-panels`);
+        if (!res.ok) return;
+        const deltas = await res.json();
+        if (!Array.isArray(deltas) || deltas.length === 0) return;
+        for (const delta of deltas) {
+          for (const [dsId, ds] of Object.entries(delta.datasets || {})) {
+            const loaded = delta.loaded?.[dsId];
+            addDataset(dsId, ds, loaded?.rows ?? []);
+          }
+          for (const [imgId, ref] of Object.entries(delta.imageRefs || {})) {
+            const loaded = delta.loaded?.[imgId];
+            addImageRef(imgId, ref, loaded?.blobURL ?? null);
+          }
+          for (const [plotId, plot] of Object.entries(delta.plots || {})) {
+            setPlot(plotId, plot);
+          }
+          appendPanel({ regionId: delta.regionId, panelDef: delta.panel });
+        }
+      } catch {
+        // server not yet ready or unavailable — ignore
+      }
+    };
+
+    pollingRef.current = setInterval(poll, 1000);
+    return () => clearInterval(pollingRef.current);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

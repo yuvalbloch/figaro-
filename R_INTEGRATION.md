@@ -216,7 +216,31 @@ Panels appear left-to-right in the order the arguments are given.
 
 ---
 
-## 5. Opening a saved session
+## 5. Adding panels to a running session
+
+You can push new panels into the browser **after** `figaro()` has already
+launched, without restarting:
+
+```r
+library(ggplot2)
+p1 <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) + geom_point()
+p2 <- ggplot(iris, aes(Species)) + geom_bar()
+p3 <- ggplot(iris, aes(Petal.Length)) + geom_histogram()
+
+fig <- figaro(panel1 = p1, panel2 = p2)
+
+# Later — adds a third panel on the right without reopening the browser
+add_panel(fig, panel3 = p3)
+```
+
+`add_panel()` accepts the same input types as `figaro()` (data frames, ggplot2
+objects, recorded base-R plots, file paths) and appends each as a new column
+to the right of the existing layout. The browser picks up changes within about
+one second.
+
+---
+
+## 7. Opening a saved session
 
 To re-open a `.figaro.json` file saved from the browser:
 
@@ -230,7 +254,7 @@ appears so you can rebind them.
 
 ---
 
-## 6. R Plot Style editor
+## 8. R Plot Style editor
 
 When an image panel backs a complex ggplot2 object (i.e. the panel has `rPlot: true`
 in its metadata), the Inspector shows an **R Plot Style** section below the
@@ -258,7 +282,7 @@ page was opened via `figaro()`). In normal browser use the section is hidden.
 
 ---
 
-## 7. Saving and exporting from the browser
+## 9. Saving and exporting from the browser
 
 Use the top-bar controls exactly as in the standalone web app:
 
@@ -272,7 +296,7 @@ when you reopen the same browser.
 
 ---
 
-## 8. Stopping the server
+## 10. Stopping the server
 
 ```r
 figaro_stop()
@@ -284,7 +308,7 @@ accessible outside your machine.
 
 ---
 
-## 9. Rebuilding the web bundle
+## 11. Rebuilding the web bundle
 
 The `figaro-r/inst/www/` directory ships a pre-built copy of the web app.
 If you modify the web app source in `figaro-/` and want to update the R
@@ -329,6 +353,19 @@ Opens the Figaro figure composer in the browser.
 | `launch` | logical | `TRUE` | Open the browser automatically. |
 
 Returns invisibly: `list(server, port)`.
+
+### `add_panel(fig, ...)`
+
+Adds one or more panels to a running Figaro session without restarting the server.
+
+| Argument | Type | Description |
+|---|---|---|
+| `fig` | list | The value returned by `figaro()`. |
+| `...` | named | Data frames, ggplot2/recordedPlot objects, or file paths. Names become panel labels. |
+
+Each input is appended as a new column to the right of the existing layout. The
+browser picks up the change within ~1 second. Returns invisibly the number of
+panels queued.
 
 ### `figaro_stop()`
 

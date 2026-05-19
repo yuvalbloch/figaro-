@@ -34,6 +34,11 @@ p <- ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
   geom_point() + labs(title = "Iris")
 figaro(scatter = p)
 
+# Add a panel to the running session (browser updates in ~1 second)
+p2 <- ggplot(iris, aes(Species)) + geom_bar()
+fig <- figaro(scatter = p)
+add_panel(fig, bar = p2)
+
 # Stop the server when done
 figaro_stop()
 ```

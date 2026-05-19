@@ -38,6 +38,11 @@
 #' @return A list with elements `$server` (httpuv handle) and `$port`.
 start_server <- function(payload_json, port = NULL, r_plots = list()) {
   if (is.null(port)) port <- httpuv::randomPort()
+
+  # Store r_plots in .figaro_env so add_panel() can extend it at runtime.
+  .figaro_env$r_plots        <- r_plots
+  .figaro_env$pending_panels <- list()
+
   www_dir <- system.file("www", package = "figaro")
 
   # Fallback: during development, look for dist-r/ next to the R source tree
@@ -79,7 +84,7 @@ start_server <- function(payload_json, port = NULL, r_plots = list()) {
           raw_body <- req$rook.input$read()
           body     <- jsonlite::fromJSON(rawToChar(raw_body), simplifyVector = FALSE)
           plot_id  <- body$plotId
-          p        <- r_plots[[plot_id]]
+          p        <- .figaro_env$r_plots[[plot_id]]
           if (is.null(p)) {
             return(list(status  = 404L,
                         headers = .cors_headers(),
@@ -120,6 +125,18 @@ start_server <- function(payload_json, port = NULL, r_plots = list()) {
                headers = .cors_headers(),
                body    = conditionMessage(e))
         })
+      }
+
+      # /pending-panels — drain the add_panel() queue and return deltas as JSON
+      if (path == "/pending-panels" && method == "GET") {
+        pending <- .figaro_env$pending_panels %||% list()
+        .figaro_env$pending_panels <- list()
+        resp_json <- jsonlite::toJSON(pending, auto_unbox = TRUE, null = "null")
+        return(list(
+          status  = 200L,
+          headers = c(list("Content-Type" = "application/json"), .cors_headers()),
+          body    = resp_json
+        ))
       }
 
       # Serve index.html for root and any unknown path (SPA fallback)
